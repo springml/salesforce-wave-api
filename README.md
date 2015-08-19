@@ -1,9 +1,9 @@
 # Salesforce Wave Client Library
 
-A JAVA library for [Salesforce Wave REST API] (https://resources.docs.salesforce.com/sfdc/pdf/bi_dev_guide_rest.pdf).
+A Java client library for [Salesforce Wave REST API] (https://resources.docs.salesforce.com/sfdc/pdf/bi_dev_guide_rest.pdf).
 
 ## Features
-This library can be used as a JAVA Client for executing Salesforce Wave API. Currently it supports querying a dataset using SAQL and return the result as POJO.
+This library can be used as a Java Client of Salesforce Wave API. Currently it supports querying a dataset using S[AQL] (https://developer.salesforce.com/docs/atlas.en-us.bi_dev_guide_eql.meta/bi_dev_guide_eql/) and return the result as POJO.
 
 
 ## Usage
@@ -32,7 +32,8 @@ import com.springml.salesforce.wave.model.QueryResult;
 import com.springml.salesforce.wave.model.Results;
 
 WaveAPI waveAPI = APIFactory.getInstance().waveAPI("salesforce_username",
-                "salesforce_password_appended_with_security_token", "https://login.salesforce.com");
+                "salesforce_password_appended_with_security_token", 
+                "https://login.salesforce.com");
 QueryResult result = waveAPI.query(SAQL);
 List<Map<String,String>> records = result.getRecords();
 
