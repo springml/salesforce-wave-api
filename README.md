@@ -38,8 +38,3 @@ QueryResult result = waveAPI.query(SAQL);
 List<Map<String,String>> records = result.getRecords();
 
 ```
-
-
-### Note
-Salesforce wave does not fetch more than 75000 records. So please make sure that your SAQL does not return more than 75000.
-
