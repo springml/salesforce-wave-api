@@ -64,15 +64,25 @@ public class WaveAPIImpl implements WaveAPI {
     }
 
     public QueryResult query(String saql) throws Exception {
-        Map<String, String> saqlMap = new HashMap<String, String>(4);
-        saqlMap.put(STR_QUERY, saql);
-        String request = getObjectMapper().writeValueAsString(saqlMap);
-
         PartnerConnection connection = getSfConfig().createPartnerConnection();
-        String queryURL = getRequestURL(connection, SERVICE_PATH_QUERY);
-        String response = getHttpHelper().post(queryURL, getSessionId(connection), request);
-        LOG.debug("Query Response from server " + response);
-        return getObjectMapper().readValue(response.getBytes(), QueryResult.class);
+        try {
+            Map<String, String> saqlMap = new HashMap<String, String>(4);
+            saqlMap.put(STR_QUERY, saql);
+            String request = getObjectMapper().writeValueAsString(saqlMap);
+
+            String queryURL = getRequestURL(connection, SERVICE_PATH_QUERY);
+            String response = getHttpHelper().post(queryURL, getSessionId(connection), request);
+            LOG.debug("Query Response from server " + response);
+            return getObjectMapper().readValue(response.getBytes(), QueryResult.class);
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.logout();
+                } catch (Exception e) {
+                    LOG.warn("Error while closing PartnerConnection", e);
+                }
+            }
+        }
     }
 
     private String getSessionId(PartnerConnection connection) {
