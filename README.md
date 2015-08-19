@@ -34,7 +34,7 @@ import com.springml.salesforce.wave.model.Results;
 WaveAPI waveAPI = APIFactory.getInstance().waveAPI("salesforce_username",
                 "salesforce_password_appended_with_security_token", 
                 "https://login.salesforce.com");
-String saql= "q = load \"dataset_id/dataset_version_id\"; q = group q by ('field1', 'field2'); q = foreach q generate 'field1' as 'field1',  'field2' as 'field2', count() as 'count'; q = limit q 2000;";
+String saql = "q = load \"dataset_id/dataset_version_id\"; q = group q by ('field1', 'field2'); q = foreach q generate 'field1' as 'field1',  'field2' as 'field2', count() as 'count'; q = limit q 2000;";
 QueryResult result = waveAPI.query(saql);
 List<Map<String,String>> records = result.getRecords();
 
