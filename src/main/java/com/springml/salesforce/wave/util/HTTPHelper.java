@@ -16,59 +16,59 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.log4j.Logger;
 
 /**
- * Helper class to get HTTP requests
+ * Helper class for HTTP requests
  */
 public class HTTPHelper {
-	private static final Logger LOG = Logger.getLogger(HTTPHelper.class);
-	
-	public String post(String uri, String sessionId, String request) throws Exception {
-		CloseableHttpClient httpClient = HttpClients.createDefault();
+    private static final Logger LOG = Logger.getLogger(HTTPHelper.class);
 
-		InputStream eis = null;
-		try {
-			LOG.info("Executing POST request on " + uri);
-			HttpPost httpPost = new HttpPost(uri);
-			LOG.debug("Sending request " + request);
-			StringEntity entity = new StringEntity(request, STR_UTF_8);
-			entity.setContentType(HEADER_APPLICATION_JSON);
-			httpPost.setConfig(getRequestConfig());
-			httpPost.setEntity(entity);
-			httpPost.addHeader(HEADER_AUTH, HEADER_OAUTH + sessionId);
-			CloseableHttpResponse response = httpClient.execute(httpPost);
+    public String post(String uri, String sessionId, String request) throws Exception {
+        CloseableHttpClient httpClient = HttpClients.createDefault();
 
-			int statusCode = response.getStatusLine().getStatusCode();
-			if (statusCode != HttpStatus.SC_OK) {
-				String reasonPhrase = response.getStatusLine().getReasonPhrase();
-				throw new Exception(
-						String.format("Accessing %s failed. Status %d. Reason %s", uri, statusCode, reasonPhrase));
-			}
+        InputStream eis = null;
+        try {
+            LOG.info("Executing POST request on " + uri);
+            HttpPost httpPost = new HttpPost(uri);
+            LOG.debug("Sending request " + request);
+            StringEntity entity = new StringEntity(request, STR_UTF_8);
+            entity.setContentType(HEADER_APPLICATION_JSON);
+            httpPost.setConfig(getRequestConfig());
+            httpPost.setEntity(entity);
+            httpPost.addHeader(HEADER_AUTH, HEADER_OAUTH + sessionId);
+            CloseableHttpResponse response = httpClient.execute(httpPost);
 
-			HttpEntity responseEntity = response.getEntity();
-			eis = responseEntity.getContent();
-			return IOUtils.toString(eis, STR_UTF_8);
-		} finally {
-			try {
-				if (httpClient != null) {
-					httpClient.close();
-				}
-			} catch (Exception e) {
-				LOG.warn("Error while closing HTTP Client", e);
-			}
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (!(statusCode == HttpStatus.SC_OK || statusCode == HttpStatus.SC_CREATED)) {
+                String reasonPhrase = response.getStatusLine().getReasonPhrase();
+                throw new Exception(
+                        String.format("Accessing %s failed. Status %d. Reason %s", uri, statusCode, reasonPhrase));
+            }
 
-			try {
-				if (eis != null) {
-					eis.close();
-				}
-			} catch (Exception e) {
-				LOG.warn("Error while closing InputStream", e);
-			}
-		}
-	}
+            HttpEntity responseEntity = response.getEntity();
+            eis = responseEntity.getContent();
+            return IOUtils.toString(eis, STR_UTF_8);
+        } finally {
+            try {
+                if (httpClient != null) {
+                    httpClient.close();
+                }
+            } catch (Exception e) {
+                LOG.warn("Error while closing HTTP Client", e);
+            }
 
-	public static RequestConfig getRequestConfig() {
-		RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(CONNECTION_TIMEOUT)
-				.setConnectTimeout(CONNECTION_TIMEOUT).setConnectionRequestTimeout(CONNECTION_TIMEOUT).build();
+            try {
+                if (eis != null) {
+                    eis.close();
+                }
+            } catch (Exception e) {
+                LOG.warn("Error while closing InputStream", e);
+            }
+        }
+    }
 
-		return requestConfig;
-	}
+    public static RequestConfig getRequestConfig() {
+        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(CONNECTION_TIMEOUT)
+                .setConnectTimeout(CONNECTION_TIMEOUT).setConnectionRequestTimeout(CONNECTION_TIMEOUT).build();
+
+        return requestConfig;
+    }
 }
