@@ -52,7 +52,7 @@ public class HTTPHelper {
                     httpClient.close();
                 }
             } catch (Exception e) {
-                LOG.warn("Error while closing HTTP Client", e);
+                LOG.debug("Error while closing HTTP Client", e);
             }
 
             try {
@@ -60,7 +60,7 @@ public class HTTPHelper {
                     eis.close();
                 }
             } catch (Exception e) {
-                LOG.warn("Error while closing InputStream", e);
+                LOG.debug("Error while closing InputStream", e);
             }
         }
     }
