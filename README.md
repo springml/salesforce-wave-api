@@ -28,7 +28,7 @@ This library can be used
 </dependency>
 ```
 
-### Example Usage to query a dataset using SAQL
+### Example Usage to query datasets using SAQL
 ```java
 import com.springml.salesforce.wave.api.APIFactory
 import com.springml.salesforce.wave.api.WaveAPI;
@@ -44,7 +44,7 @@ List<Map<String,String>> records = result.getRecords();
 
 ```
 
-### Example Usage to query salesforce object using SOQL
+### Example Usage to query salesforce objects using SOQL
 ```java
 import com.springml.salesforce.wave.api.APIFactory
 import com.springml.salesforce.wave.api.ForceAPI;
