@@ -3,7 +3,9 @@
 A Java client library for [Salesforce Wave REST API] (https://resources.docs.salesforce.com/sfdc/pdf/bi_dev_guide_rest.pdf).
 
 ## Features
-This library can be used as a Java Client of Salesforce Wave API. Currently it supports querying a dataset using [SAQL] (https://developer.salesforce.com/docs/atlas.en-us.bi_dev_guide_eql.meta/bi_dev_guide_eql/) and return the result as POJO.
+This library can be used as a Java Client of Salesforce Wave API. 
+* It supports querying a dataset using [SAQL] (https://developer.salesforce.com/docs/atlas.en-us.bi_dev_guide_eql.meta/bi_dev_guide_eql/) and return the result as POJO.
+* It supports querying saleforce sing [SOQL] (https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/) and return the result as POJO.
 
 
 ## Usage
@@ -13,18 +15,20 @@ This library requires Salesforce username, Salesforce password and Salesforce lo
 * loginURL can be http://login.salesforce.com or http://test.salesforce.com 
 
 ### Querying a dataset
-This library can be used to query a dataset using [SAQL] (https://developer.salesforce.com/docs/atlas.en-us.bi_dev_guide_eql.meta/bi_dev_guide_eql/). Refer [WaveAPITest.java] (https://github.com/springml/salesforce-wave-api/blob/master/src/test/java/com/springml/salesforce/wave/api/WaveAPITest.java) for querying a dataset from Salesforce Wave
+This library can be used 
+* To query a dataset using [SAQL] (https://developer.salesforce.com/docs/atlas.en-us.bi_dev_guide_eql.meta/bi_dev_guide_eql/). Refer [WaveAPITest.java] (https://github.com/springml/salesforce-wave-api/blob/master/src/test/java/com/springml/salesforce/wave/api/WaveAPITest.java) for querying a dataset from Salesforce Wave
+* To query salesforce object using [SOQL] (https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/). Refer [ForceAPITest.java] (https://github.com/springml/salesforce-wave-api/blob/master/src/test/java/com/springml/salesforce/wave/api/ForceAPITest.java) for querying a dataset from Salesforce Wave
 
 ### Maven Dependency
 ```
 <dependency>
     <groupId>com.springml</groupId>
     <artifactId>salesforce-wave-api</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
-### Example Usage
+### Example Usage to query a dataset using SAQL
 ```java
 import com.springml.salesforce.wave.api.APIFactory
 import com.springml.salesforce.wave.api.WaveAPI;
@@ -37,5 +41,20 @@ WaveAPI waveAPI = APIFactory.getInstance().waveAPI("salesforce_username",
 String saql = "q = load \"dataset_id/dataset_version_id\"; q = group q by ('field1', 'field2'); q = foreach q generate 'field1' as 'field1',  'field2' as 'field2', count() as 'count'; q = limit q 2000;";
 QueryResult result = waveAPI.query(saql);
 List<Map<String,String>> records = result.getRecords();
+
+```
+
+### Example Usage to query salesforce object using SOQL
+```java
+import com.springml.salesforce.wave.api.APIFactory
+import com.springml.salesforce.wave.api.ForceAPI;
+import com.springml.salesforce.wave.model.SOQLResult;
+
+ForceAPI forceAPI = APIFactory.getInstance().forceAPI("salesforce_username",
+                "salesforce_password_appended_with_security_token", 
+                "https://login.salesforce.com");
+String soql = "SELECT AccountId, Id FROM Opportunity";
+SOQLResult result = forceAPI.query(soql);
+List<Map<String,Object>> records = result.getRecords();
 
 ```
