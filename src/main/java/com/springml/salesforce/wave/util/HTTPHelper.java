@@ -52,7 +52,6 @@ public class HTTPHelper {
 
         InputStream eis = null;
         try {
-            LOG.info("Executing GET request on " + uri);
             CloseableHttpResponse response = httpClient.execute(httpGet);
 
             int statusCode = response.getStatusLine().getStatusCode();

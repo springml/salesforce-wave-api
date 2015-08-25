@@ -1,7 +1,13 @@
 package com.springml.salesforce.wave.model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * POJO for SOQL result
@@ -50,4 +56,24 @@ public class SOQLResult {
         this.records = records;
     }
 
+    @JsonIgnore
+    public List<Map<String, String>> filterRecords() {
+        List<Map<String, String>> filteredRecords = new ArrayList<Map<String, String>>();
+        if (records != null) {
+            for (Map<String, Object> fields : records) {
+                Map<String, String> filteredMap = new HashMap<String, String>();
+                Set<Entry<String, Object>> entries = fields.entrySet();
+
+                for (Entry<String, Object> entry : entries) {
+                    if (!entry.getKey().equals("attributes")) {
+                        filteredMap.put(entry.getKey(), String.valueOf(entry.getValue()));
+                    }
+                }
+
+                filteredRecords.add(filteredMap);
+            }
+        }
+
+        return filteredRecords;
+    }
 }
