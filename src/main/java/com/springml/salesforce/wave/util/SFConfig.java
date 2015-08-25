@@ -3,6 +3,7 @@ package com.springml.salesforce.wave.util;
 import static com.springml.salesforce.wave.util.WaveAPIConstants.*;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.apache.log4j.Logger;
 
@@ -64,6 +65,21 @@ public class SFConfig {
             LOG.error("Exception while creating connection", ce);
             throw new Exception(ce);
         }
+    }
+
+    public String getSessionId(PartnerConnection connection) {
+        return connection.getConfig().getSessionId();
+    }
+
+    public URI getRequestURI(PartnerConnection connection, String path) throws URISyntaxException {
+        return getRequestURI(connection, path, null);
+    }
+
+    public URI getRequestURI(PartnerConnection connection, String path, String query) throws URISyntaxException {
+        URI seURI = new URI(connection.getConfig().getServiceEndpoint());
+
+        return new URI(seURI.getScheme(),seURI.getUserInfo(), seURI.getHost(), seURI.getPort(),
+                path, query, null);
     }
 
     private String getAuthEndpoint(String loginURL) throws Exception {

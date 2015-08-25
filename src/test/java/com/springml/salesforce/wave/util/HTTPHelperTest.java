@@ -2,6 +2,8 @@ package com.springml.salesforce.wave.util;
 
 import static org.junit.Assert.*;
 
+import java.net.URI;
+
 import org.junit.Test;
 
 /**
@@ -14,8 +16,18 @@ public class HTTPHelperTest {
     public void testPost() throws Exception {
         HTTPHelper httpHelper = new HTTPHelper();
         String request = "{\"query\":\"q = load \\\"0FbB000000007qmKAA/0FcB00000000LgTKAU\\\"; q = group q by ('event', 'device_type'); q = foreach q generate 'event' as 'event',  'device_type' as 'device_type', count() as 'count'; q = limit q 2000;\"}";
-        String response = httpHelper.post("http://jsonplaceholder.typicode.com/posts", "sessionId", request);
+        URI requestURI = new URI("http://jsonplaceholder.typicode.com/posts");
+        String response = httpHelper.post(requestURI, "sessionId", request);
 
         assertTrue(response.contains("device_type"));
+    }
+
+    @Test
+    public void testGet() throws Exception {
+        HTTPHelper httpHelper = new HTTPHelper();
+        URI requestURI = new URI("http://jsonplaceholder.typicode.com/posts");
+        String response = httpHelper.get(requestURI, "sessionId");
+
+        assertTrue(response.contains("userId"));
     }
 }

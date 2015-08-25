@@ -1,5 +1,6 @@
 package com.springml.salesforce.wave.api;
 
+import com.springml.salesforce.wave.impl.ForceAPIImpl;
 import com.springml.salesforce.wave.impl.WaveAPIImpl;
 import com.springml.salesforce.wave.util.SFConfig;
 
@@ -21,5 +22,9 @@ public class APIFactory {
 
     public WaveAPI waveAPI(String username, String password, String loginURL) throws Exception {
         return new WaveAPIImpl(new SFConfig(username, password, loginURL));
+    }
+
+    public ForceAPI forceAPI(String username, String password, String loginURL) throws Exception {
+        return new ForceAPIImpl(new SFConfig(username, password, loginURL));
     }
 }
