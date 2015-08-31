@@ -18,6 +18,7 @@ public class SFConfig {
     private String username;
     private String password;
     private String loginURL;
+    private PartnerConnection partnerConnection;
 
     public SFConfig(String username, String password, String loginURL) {
         this.username = username;
@@ -49,7 +50,15 @@ public class SFConfig {
         this.loginURL = loginURL;
     }
 
-    public PartnerConnection createPartnerConnection() throws Exception {
+    public PartnerConnection getPartnerConnection() throws Exception {
+        if (partnerConnection == null) {
+            partnerConnection = createPartnerConnection();
+        }
+
+        return partnerConnection;
+    }
+
+    private PartnerConnection createPartnerConnection() throws Exception {
         ConnectorConfig config = new ConnectorConfig();
         LOG.debug("Connecting SF Partner Connection using " + username);
         config.setUsername(username);

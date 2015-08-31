@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  * {
  *   "totalSize": 4,
  *   "done": true,
+ *   "nextRecordsUrl": "/services/data/v34.0/query/01gB000000HupiDIAR-6000",
  *   "records": [
  *     {
  *       "attributes": {
@@ -30,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class SOQLResult {
     private int totalSize;
     private boolean done;
+    private String nextRecordsUrl;
     private List<Map<String, Object>> records;
 
     public int getTotalSize() {
@@ -46,6 +48,14 @@ public class SOQLResult {
 
     public void setDone(boolean done) {
         this.done = done;
+    }
+
+    public String getNextRecordsUrl() {
+        return nextRecordsUrl;
+    }
+
+    public void setNextRecordsUrl(String nextRecordsUrl) {
+        this.nextRecordsUrl = nextRecordsUrl;
     }
 
     public List<Map<String, Object>> getRecords() {
@@ -76,4 +86,5 @@ public class SOQLResult {
 
         return filteredRecords;
     }
+
 }

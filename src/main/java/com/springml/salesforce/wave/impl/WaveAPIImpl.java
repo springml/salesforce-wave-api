@@ -26,7 +26,7 @@ public class WaveAPIImpl extends AbstractAPIImpl implements WaveAPI {
     }
 
     public QueryResult query(String saql) throws Exception {
-        PartnerConnection connection = getSfConfig().createPartnerConnection();
+        PartnerConnection connection = getSfConfig().getPartnerConnection();
         try {
             Map<String, String> saqlMap = new HashMap<String, String>(4);
             saqlMap.put(STR_QUERY, saql);

@@ -47,16 +47,17 @@ public class HTTPHelper {
         return execute(uri, httpGet);
     }
 
-    public String execute(URI uri, HttpUriRequest httpGet) throws Exception {
+    private String execute(URI uri, HttpUriRequest httpReq) throws Exception {
         CloseableHttpClient httpClient = HttpClients.createDefault();
 
         InputStream eis = null;
         try {
-            CloseableHttpResponse response = httpClient.execute(httpGet);
+            CloseableHttpResponse response = httpClient.execute(httpReq);
 
             int statusCode = response.getStatusLine().getStatusCode();
             if (!(statusCode == HttpStatus.SC_OK || statusCode == HttpStatus.SC_CREATED)) {
                 String reasonPhrase = response.getStatusLine().getReasonPhrase();
+                System.out.println("Response :  " + response.getEntity().getContent());
                 throw new Exception(
                         String.format("Accessing %s failed. Status %d. Reason %s", uri, statusCode, reasonPhrase));
             }

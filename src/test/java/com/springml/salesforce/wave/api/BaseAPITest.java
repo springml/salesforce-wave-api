@@ -23,7 +23,7 @@ public abstract class BaseAPITest {
         conn = PartnerConnectionExt.getInstance();
 
         sfConfig = mock(SFConfig.class);
-        when(sfConfig.createPartnerConnection()).thenReturn(conn);
+        when(sfConfig.getPartnerConnection()).thenReturn(conn);
 
         objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);

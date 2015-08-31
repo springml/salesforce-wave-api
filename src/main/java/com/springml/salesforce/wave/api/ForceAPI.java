@@ -14,4 +14,12 @@ public interface ForceAPI {
      * @throws Exception
      */
     public SOQLResult query(String soql) throws Exception;
+
+    /**
+     * Query further records using nextRecordsURL
+     * @param oldResult 
+     * @return
+     * @throws Exception
+     */
+    public SOQLResult queryMore(SOQLResult oldResult) throws Exception;
 }

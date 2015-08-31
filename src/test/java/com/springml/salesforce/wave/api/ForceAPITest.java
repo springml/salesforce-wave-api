@@ -18,6 +18,7 @@ import com.springml.salesforce.wave.util.HTTPHelper;
 
 public class ForceAPITest extends BaseAPITest {
     private static final String SOQL = "SELECT AccountId, Id, ProposalID__c FROM Opportunity where ProposalID__c != null";
+    private static final String QUERY_MORE_SOQL = "SELECT Id, OwnerId, Name, Player_Id__c, Phone__c FROM player__c";
     private static final String RESPONSE_JSON = "{\"totalSize\":4,\"done\":true,\"records\":[{\"attributes\":{\"type\":\"Opportunity\",\"url\":\"/services/data/v34.0/sobjects/Opportunity/006B0000002ndnuIAA\"},\"AccountId\":\"001B0000003oYAfIAM\",\"Id\":\"006B0000002ndnuIAA\",\"ProposalID__c\":\"103\"},{\"attributes\":{\"type\":\"Opportunity\",\"url\":\"/services/data/v34.0/sobjects/Opportunity/006B0000002ndnpIAA\"},\"AccountId\":\"001B0000003oYAfIAM\",\"Id\":\"006B0000002ndnpIAA\",\"ProposalID__c\":\"102\"}]}";
 
     @Before
@@ -45,6 +46,7 @@ public class ForceAPITest extends BaseAPITest {
         System.out.println(result.getRecords().get(0).get("ProposalID__c"));
         assertEquals(4, result.getRecords().size());
         assertEquals("103", result.getRecords().get(0).get("ProposalID__c"));
+        assertTrue(result.isDone());
     }
 
     @Test
@@ -63,6 +65,49 @@ public class ForceAPITest extends BaseAPITest {
         assertEquals(2, records.size());
         Map<String, Object> values = records.get(1);
         assertEquals("006B0000002ndnpIAA", values.get("Id"));
+        assertTrue(result.isDone());
     }
 
+    @Test
+    @Ignore("This can be only executed with actual salesforce username and password")
+    public void testQueryMoreWithoutMock() throws Exception {
+        ForceAPI forceAPI = APIFactory.getInstance().forceAPI("samspark@palmtreeinfotech.com",
+                "Fire2015!uRu7NN7L99uIiRZr9VCngTCg", "https://login.salesforce.com");
+
+	System.out.println("Executing QueryMoreWithoutLock.......");
+        SOQLResult result = forceAPI.query(QUERY_MORE_SOQL);
+        System.out.println("records size :  " + result.getRecords().size());
+        assertEquals(2000, result.getRecords().size());
+        assertEquals(false, result.isDone());
+
+        SOQLResult newResults = forceAPI.queryMore(result);
+        assertEquals(2000, newResults.getRecords().size());
+        assertEquals(false, newResults.isDone());
+    }
+
+    @Test
+    public void testQueryMore() throws Exception {
+        ForceAPI forceAPI = APIFactory.getInstance().forceAPI("dummyusername",
+                "dummypassword", "https://login.salesforce.com");
+        ((ForceAPIImpl) forceAPI).setHttpHelper(httpHelper);
+        ((ForceAPIImpl) forceAPI).setSfConfig(sfConfig);
+        ((ForceAPIImpl) forceAPI).setObjectMapper(objectMapper);
+
+        SOQLResult result = forceAPI.query(SOQL);
+        assertNotNull(result);
+        List<Map<String,Object>> records = result.getRecords();
+        assertNotNull(records);
+        assertTrue(!records.isEmpty());
+        assertEquals(2, records.size());
+        Map<String, Object> values = records.get(1);
+        assertEquals("006B0000002ndnpIAA", values.get("Id"));
+        assertEquals(true, result.isDone());
+
+        try {
+            forceAPI.queryMore(result);
+            fail("Exception is not thrown when queryMore executed for a done result");
+        } catch (Exception e) {
+            // Expected
+        }
+    }
 }
