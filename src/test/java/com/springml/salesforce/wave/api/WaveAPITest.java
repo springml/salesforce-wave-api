@@ -32,8 +32,8 @@ public class WaveAPITest extends BaseAPITest {
     @Test
     @Ignore("This can be only executed with actual salesforce username and password")
     public void testQueryWithoutMock() throws Exception {
-        WaveAPI waveAPI = APIFactory.getInstance().waveAPI("samspark@palmtreeinfotech.com",
-                "Fire2015!uRu7NN7L99uIiRZr9VCngTCg", "https://login.salesforce.com");
+        WaveAPI waveAPI = APIFactory.getInstance().waveAPI("xxx@xxx.com",
+                "***", "https://login.salesforce.com");
 
         QueryResult result = waveAPI.query(SAQL);
         System.out.println(result.getResults().getRecords().get(0).get("count"));

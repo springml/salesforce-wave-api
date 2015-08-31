@@ -36,8 +36,8 @@ public class ForceAPITest extends BaseAPITest {
     @Test
     @Ignore("This can be only executed with actual salesforce username and password")
     public void testQueryWithoutMock() throws Exception {
-        ForceAPI forceAPI = APIFactory.getInstance().forceAPI("samspark@palmtreeinfotech.com",
-                "Fire2015!uRu7NN7L99uIiRZr9VCngTCg", "https://login.salesforce.com");
+        ForceAPI forceAPI = APIFactory.getInstance().forceAPI("xxx@xxx.com",
+                "***", "https://login.salesforce.com");
 
         SOQLResult result = forceAPI.query(SOQL);
         System.out.println("result :  " + result);
@@ -71,8 +71,8 @@ public class ForceAPITest extends BaseAPITest {
     @Test
     @Ignore("This can be only executed with actual salesforce username and password")
     public void testQueryMoreWithoutMock() throws Exception {
-        ForceAPI forceAPI = APIFactory.getInstance().forceAPI("samspark@palmtreeinfotech.com",
-                "Fire2015!uRu7NN7L99uIiRZr9VCngTCg", "https://login.salesforce.com");
+        ForceAPI forceAPI = APIFactory.getInstance().forceAPI("xxx@xxx.com",
+                "***", "https://login.salesforce.com");
 
 	System.out.println("Executing QueryMoreWithoutLock.......");
         SOQLResult result = forceAPI.query(QUERY_MORE_SOQL);
