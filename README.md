@@ -56,5 +56,11 @@ ForceAPI forceAPI = APIFactory.getInstance().forceAPI("salesforce_username",
 String soql = "SELECT AccountId, Id FROM Opportunity";
 SOQLResult result = forceAPI.query(soql);
 List<Map<String,Object>> records = result.getRecords();
+// By default Salesforce will return 2000 records in a single call
+// To query more use queryMore()
+while (!result.isDone()) {
+    result = forceAPI.queryMore();
+    records.addAll(result.getRecords());
+}
 
 ```
