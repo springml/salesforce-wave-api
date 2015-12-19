@@ -26,13 +26,15 @@ public class WaveAPIImpl extends AbstractAPIImpl implements WaveAPI {
     }
 
     public QueryResult query(String saql) throws Exception {
-        PartnerConnection connection = getSfConfig().getPartnerConnection();
+        SFConfig sfConfig = getSfConfig();
+        PartnerConnection connection = sfConfig.getPartnerConnection();
         try {
             Map<String, String> saqlMap = new HashMap<String, String>(4);
             saqlMap.put(STR_QUERY, saql);
             String request = getObjectMapper().writeValueAsString(saqlMap);
 
-            URI queryURI = getSfConfig().getRequestURI(connection, SERVICE_PATH_WAVE_QUERY);
+            String waveQueryPath = getWaveQueryPath(sfConfig);
+            URI queryURI = sfConfig.getRequestURI(connection, waveQueryPath);
             String response = getHttpHelper().post(queryURI, getSfConfig().getSessionId(connection), request);
             LOG.debug("Query Response from server " + response);
             return getObjectMapper().readValue(response.getBytes(), QueryResult.class);
@@ -45,6 +47,16 @@ public class WaveAPIImpl extends AbstractAPIImpl implements WaveAPI {
                 }
             }
         }
+    }
+
+    private String getWaveQueryPath(SFConfig sfConfig) {
+        StringBuilder waveQueryPath = new StringBuilder();
+        waveQueryPath.append(SERVICE_PATH);
+        waveQueryPath.append("v");
+        waveQueryPath.append(sfConfig.getApiVersion());
+        waveQueryPath.append(PATH_WAVE_QUERY);
+
+        return waveQueryPath.toString();
     }
 
 }

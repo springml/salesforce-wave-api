@@ -24,8 +24,10 @@ public class ForceAPIImpl extends AbstractAPIImpl implements ForceAPI {
         StringBuilder queryParam = new StringBuilder();
         queryParam.append(QUERY_PARAM);
         queryParam.append(soql);
+        SFConfig sfConfig = getSfConfig();
+        String queryPath = getQueryPath(sfConfig);
         URI queryURI = getSfConfig().getRequestURI(
-                getSfConfig().getPartnerConnection(), SERVICE_PATH_QUERY, queryParam.toString());
+                getSfConfig().getPartnerConnection(), queryPath, queryParam.toString());
 
         return query(queryURI);
     }
@@ -57,5 +59,15 @@ public class ForceAPIImpl extends AbstractAPIImpl implements ForceAPI {
                 }
             }
         }
+    }
+
+    private String getQueryPath(SFConfig sfConfig) {
+        StringBuilder queryPath = new StringBuilder();
+        queryPath.append(SERVICE_PATH);
+        queryPath.append("v");
+        queryPath.append(sfConfig.getApiVersion());
+        queryPath.append(PATH_QUERY);
+
+        return queryPath.toString();
     }
 }

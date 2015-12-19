@@ -18,12 +18,14 @@ public class SFConfig {
     private String username;
     private String password;
     private String loginURL;
+    private String apiVersion;
     private PartnerConnection partnerConnection;
 
-    public SFConfig(String username, String password, String loginURL) {
+    public SFConfig(String username, String password, String loginURL, String apiVersion) {
         this.username = username;
         this.password = password;
         this.loginURL = loginURL;
+        this.apiVersion = apiVersion;
     }
 
     public String getUsername() {
@@ -48,6 +50,14 @@ public class SFConfig {
 
     public void setLoginURL(String loginURL) {
         this.loginURL = loginURL;
+    }
+
+    public String getApiVersion() {
+        return apiVersion;
+    }
+
+    public void setApiVersion(String apiVersion) {
+        this.apiVersion = apiVersion;
     }
 
     public PartnerConnection getPartnerConnection() throws Exception {
