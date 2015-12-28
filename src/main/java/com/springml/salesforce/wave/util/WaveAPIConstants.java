@@ -3,6 +3,11 @@ package com.springml.salesforce.wave.util;
 public class WaveAPIConstants {
     public static final String STR_QUERY = "query";
     public static final String STR_UTF_8 = "UTF-8";
+    public static final String STR_SPACE = " ";
+    public static final String STR_EQUALS = "=";
+    public static final String STR_SEMI_COLON = ";";
+    public static final String STR_LIMIT_BTW_SPACE = " limit ";
+    public static final String STR_OFFSET_BTW_SPACE = " offset ";
 
     public static final String HEADER_APPLICATION_JSON = "application/json";
     public static final String HEADER_ACCEPT = "Accept";
