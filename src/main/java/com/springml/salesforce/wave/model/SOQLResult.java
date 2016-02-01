@@ -1,5 +1,7 @@
 package com.springml.salesforce.wave.model;
 
+import static com.springml.salesforce.wave.util.WaveAPIConstants.STR_ATTRIBUTES;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -75,8 +77,13 @@ public class SOQLResult {
                 Set<Entry<String, Object>> entries = fields.entrySet();
 
                 for (Entry<String, Object> entry : entries) {
-                    if (!entry.getKey().equals("attributes")) {
-                        filteredMap.put(entry.getKey(), String.valueOf(entry.getValue()));
+                    if (!entry.getKey().equals(STR_ATTRIBUTES)) {
+                        Object value = entry.getValue();
+                        if (value instanceof Map) {
+                            filteredMap.putAll(getRelatedRecords(entry.getKey(), (Map) value));
+                        } else {
+                            filteredMap.put(entry.getKey(), String.valueOf(value));
+                        }
                     }
                 }
 
@@ -85,6 +92,20 @@ public class SOQLResult {
         }
 
         return filteredRecords;
+    }
+
+    private Map<String, String> getRelatedRecords(String key, Map<String, Object> value) {
+        Set<Entry<String, Object>> entries = value.entrySet();
+
+        Map<String, String> relatedRecords = new HashMap<String, String>();
+
+        for (Entry<String, Object> entry : entries) {
+            if (!entry.getKey().equals(STR_ATTRIBUTES)) {
+                relatedRecords.put(key + "." + entry.getKey(), String.valueOf(entry.getValue()));
+            }
+        }
+
+        return relatedRecords;
     }
 
 }

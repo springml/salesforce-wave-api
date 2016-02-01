@@ -47,6 +47,7 @@ public class WaveAPIImpl extends AbstractAPIImpl implements WaveAPI {
         PartnerConnection connection = sfConfig.getPartnerConnection();
         try {
             Map<String, String> saqlMap = new HashMap<String, String>(4);
+            LOG.info("Query to be executed : " + saql);
             saqlMap.put(STR_QUERY, saql);
             String request = getObjectMapper().writeValueAsString(saqlMap);
 

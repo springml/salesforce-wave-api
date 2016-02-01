@@ -43,11 +43,32 @@ public class ForceAPITest extends BaseAPITest {
         System.out.println("result :  " + result);
         System.out.println("records :  " + result.getRecords());
         System.out.println("records size :  " + result.getRecords().size());
+        List<Map<String, String>> filterRecords = result.filterRecords();
+        System.out.println("filterRecords : " + filterRecords);
         System.out.println(result.getRecords().get(0).get("ProposalID__c"));
         assertEquals(4, result.getRecords().size());
         assertEquals("103", result.getRecords().get(0).get("ProposalID__c"));
         assertTrue(result.isDone());
     }
+
+    @Test
+    @Ignore("This can be only executed with actual salesforce username and password")
+    public void testRelationshipQueryWithoutMock() throws Exception {
+      ForceAPI forceAPI = APIFactory.getInstance().forceAPI("xxx@xxx.com",
+              "***", "https://login.salesforce.com");
+
+      String sql = "SELECT id, Account.type, name, stagename, amount, type, nextstep, leadsource, isclosed, iswon, forecastcategory FROM Opportunity";
+      SOQLResult result = forceAPI.query(sql);
+      System.out.println("result :  " + result);
+      System.out.println("records :  " + result.getRecords());
+      System.out.println("records size :  " + result.getRecords().size());
+      List<Map<String, String>> filterRecords = result.filterRecords();
+      System.out.println("filterRecords : " + filterRecords);
+      System.out.println(filterRecords.get(0).get("Account.Type"));
+      assertEquals(8, result.getRecords().size());
+      assertEquals("Prospect", filterRecords.get(0).get("Account.Type"));
+      assertTrue(result.isDone());
+  }
 
     @Test
     public void testQuery() throws Exception {
@@ -74,7 +95,7 @@ public class ForceAPITest extends BaseAPITest {
         ForceAPI forceAPI = APIFactory.getInstance().forceAPI("xxx@xxx.com",
                 "***", "https://login.salesforce.com");
 
-	System.out.println("Executing QueryMoreWithoutLock.......");
+        System.out.println("Executing QueryMoreWithoutLock.......");
         SOQLResult result = forceAPI.query(QUERY_MORE_SOQL);
         System.out.println("records size :  " + result.getRecords().size());
         assertEquals(2000, result.getRecords().size());
