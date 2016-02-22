@@ -13,7 +13,7 @@ import com.sforce.ws.ConnectionException;
 import com.sforce.ws.ConnectorConfig;
 
 public class SFConfig {
-    private static final Logger LOG = Logger.getLogger(HTTPHelper.class);
+    private static final Logger LOG = Logger.getLogger(SFConfig.class);
 
     private String username;
     private String password;

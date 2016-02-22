@@ -85,8 +85,9 @@ public class HTTPHelper {
     }
 
     public static RequestConfig getRequestConfig() {
-        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(CONNECTION_TIMEOUT)
-                .setConnectTimeout(CONNECTION_TIMEOUT).setConnectionRequestTimeout(CONNECTION_TIMEOUT).build();
+        int timeout = Integer.parseInt(System.getProperty(SYS_PROPERTY_SOCKET_TIMEOUT, DEFAULT_CONNECTION_TIMEOUT));
+        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(timeout)
+                .setConnectTimeout(timeout).setConnectionRequestTimeout(timeout).build();
 
         return requestConfig;
     }

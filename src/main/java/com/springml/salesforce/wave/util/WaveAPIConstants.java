@@ -15,8 +15,6 @@ public class WaveAPIConstants {
     public static final String HEADER_AUTH = "Authorization";
     public static final String HEADER_OAUTH = "OAuth ";
 
-    public static final int CONNECTION_TIMEOUT = 60000;
-
     public static final String SERVICE_PATH = "/services/data/";
     public static final String API_VERSION = "35.0";
     public static final String PATH_WAVE_QUERY = "/wave/query";
@@ -25,4 +23,10 @@ public class WaveAPIConstants {
     public static final String PATH_QUERY = "/query";
     public static final String SERVICE_PATH_QUERY = SERVICE_PATH + "v" + API_VERSION + PATH_QUERY;
     public static final String QUERY_PARAM = "q=";
+
+    public static final String SYS_PROPERTY_SOCKET_TIMEOUT = "com.springml.socket.timeout";
+
+    // 10 minutes
+    public static final String DEFAULT_CONNECTION_TIMEOUT = "600000";
+
 }
