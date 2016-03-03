@@ -14,6 +14,8 @@ public class WaveAPIConstants {
     public static final String HEADER_ACCEPT = "Accept";
     public static final String HEADER_AUTH = "Authorization";
     public static final String HEADER_OAUTH = "OAuth ";
+    public static final String HEADER_SF_QUERY_OPTIONS = "Sforce-Query-Options";
+    public static final String HEADER_BATCH_SIZE = "batchSize=";
 
     public static final String SERVICE_PATH = "/services/data/";
     public static final String API_VERSION = "35.0";

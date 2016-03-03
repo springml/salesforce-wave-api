@@ -44,7 +44,8 @@ public class ForceAPIImpl extends AbstractAPIImpl implements ForceAPI {
     private SOQLResult query(URI queryURI) throws Exception {
         SOQLResult soqlResult = null;
         try {
-            String response = getHttpHelper().get(queryURI, getSfConfig().getSessionId(getSfConfig().getPartnerConnection()));
+            String response = getHttpHelper().get(queryURI,
+                    getSfConfig().getSessionId(getSfConfig().getPartnerConnection()), getSfConfig().getBatchSize());
 
             LOG.debug("Query Response from server " + response);
             soqlResult = getObjectMapper().readValue(response.getBytes(), SOQLResult.class);

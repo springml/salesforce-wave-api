@@ -30,7 +30,7 @@ public class ForceAPITest extends BaseAPITest {
         when(sfConfig.getRequestURI(conn, SERVICE_PATH_QUERY, queryParam.toString())).thenCallRealMethod();
 
         httpHelper = mock(HTTPHelper.class);
-        when(httpHelper.get(any(URI.class), any(String.class))).thenReturn(RESPONSE_JSON);
+        when(httpHelper.get(any(URI.class), any(String.class), any(Integer.class))).thenReturn(RESPONSE_JSON);
     }
 
     @Test

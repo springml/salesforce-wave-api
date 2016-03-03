@@ -19,13 +19,21 @@ public class SFConfig {
     private String password;
     private String loginURL;
     private String apiVersion;
+    private Integer batchSize;
     private PartnerConnection partnerConnection;
 
-    public SFConfig(String username, String password, String loginURL, String apiVersion) {
+    public SFConfig(String username, String password, String loginURL,
+            String apiVersion) {
+        this(username, password, loginURL, apiVersion, null);
+    }
+
+    public SFConfig(String username, String password, String loginURL,
+            String apiVersion, Integer batchSize) {
         this.username = username;
         this.password = password;
         this.loginURL = loginURL;
         this.apiVersion = apiVersion;
+        this.batchSize = batchSize;
     }
 
     public String getUsername() {
@@ -58,6 +66,14 @@ public class SFConfig {
 
     public void setApiVersion(String apiVersion) {
         this.apiVersion = apiVersion;
+    }
+
+    public Integer getBatchSize() {
+        return batchSize;
+    }
+
+    public void setBatchSize(Integer batchSize) {
+        this.batchSize = batchSize;
     }
 
     public PartnerConnection getPartnerConnection() throws Exception {

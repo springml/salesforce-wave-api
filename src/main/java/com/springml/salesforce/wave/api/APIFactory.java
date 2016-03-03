@@ -36,4 +36,9 @@ public class APIFactory {
     public ForceAPI forceAPI(String username, String password, String loginURL, String apiVersion) throws Exception {
         return new ForceAPIImpl(new SFConfig(username, password, loginURL, apiVersion));
     }
+
+    public ForceAPI forceAPI(String username, String password, String loginURL,
+            String apiVersion, Integer batchSize) throws Exception {
+        return new ForceAPIImpl(new SFConfig(username, password, loginURL, apiVersion, batchSize));
+    }
 }

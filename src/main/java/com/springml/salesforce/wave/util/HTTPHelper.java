@@ -47,6 +47,19 @@ public class HTTPHelper {
         return execute(uri, httpGet);
     }
 
+    public String get(URI uri, String sessionId, Integer batchSize) throws Exception {
+        LOG.info("Executing GET request on " + uri);
+        HttpGet httpGet = new HttpGet(uri);
+        httpGet.setConfig(getRequestConfig());
+        httpGet.addHeader(HEADER_AUTH, HEADER_OAUTH + sessionId);
+        httpGet.addHeader(HEADER_ACCEPT, HEADER_APPLICATION_JSON);
+        if (batchSize != null && batchSize != 0) {
+            httpGet.addHeader(HEADER_SF_QUERY_OPTIONS, HEADER_BATCH_SIZE + batchSize);
+        }
+
+        return execute(uri, httpGet);
+    }
+
     private String execute(URI uri, HttpUriRequest httpReq) throws Exception {
         CloseableHttpClient httpClient = HttpClients.createDefault();
 
