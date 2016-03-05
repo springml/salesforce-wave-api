@@ -29,7 +29,7 @@ public class ForceAPIImpl extends AbstractAPIImpl implements ForceAPI {
         URI queryURI = getSfConfig().getRequestURI(
                 getSfConfig().getPartnerConnection(), queryPath, queryParam.toString());
 
-        return query(queryURI);
+        return query(queryURI, 1);
     }
 
     public SOQLResult queryMore(SOQLResult soqlResult) throws Exception {
@@ -38,10 +38,10 @@ public class ForceAPIImpl extends AbstractAPIImpl implements ForceAPI {
         }
 
         URI requestURI = getSfConfig().getRequestURI(getSfConfig().getPartnerConnection(), soqlResult.getNextRecordsUrl());
-        return query(requestURI);
+        return query(requestURI, 1);
     }
 
-    private SOQLResult query(URI queryURI) throws Exception {
+    private SOQLResult query(URI queryURI, int attempt) throws Exception {
         SOQLResult soqlResult = null;
         try {
             String response = getHttpHelper().get(queryURI,
@@ -49,8 +49,17 @@ public class ForceAPIImpl extends AbstractAPIImpl implements ForceAPI {
 
             LOG.debug("Query Response from server " + response);
             soqlResult = getObjectMapper().readValue(response.getBytes(), SOQLResult.class);
-
-            return soqlResult;
+        } catch (Exception e) {
+            LOG.warn("Error while executing salesforce query ", e);
+            if (e.getMessage().contains("QUERY_TIMEOUT") && attempt < 5) {
+                LOG.info("Retrying salesforce query");
+                LOG.info("Retry attempt " + attempt);
+                //Retrying incase of Salesforce service timeout
+                attempt++;
+                soqlResult = query(queryURI, attempt);
+            } else {
+                throw e;
+            }
         } finally {
             if (getSfConfig().getPartnerConnection() != null && soqlResult != null && soqlResult.isDone()) {
                 try {
@@ -60,6 +69,8 @@ public class ForceAPIImpl extends AbstractAPIImpl implements ForceAPI {
                 }
             }
         }
+
+        return soqlResult;
     }
 
     private String getQueryPath(SFConfig sfConfig) {

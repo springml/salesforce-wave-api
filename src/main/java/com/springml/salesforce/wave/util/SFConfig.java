@@ -21,6 +21,7 @@ public class SFConfig {
     private String apiVersion;
     private Integer batchSize;
     private PartnerConnection partnerConnection;
+    private Integer maxRetry = 5;
 
     public SFConfig(String username, String password, String loginURL,
             String apiVersion) {
@@ -74,6 +75,14 @@ public class SFConfig {
 
     public void setBatchSize(Integer batchSize) {
         this.batchSize = batchSize;
+    }
+
+    public Integer getMaxRetry() {
+        return maxRetry;
+    }
+
+    public void setMaxRetry(Integer maxRetry) {
+        this.maxRetry = maxRetry;
     }
 
     public PartnerConnection getPartnerConnection() throws Exception {

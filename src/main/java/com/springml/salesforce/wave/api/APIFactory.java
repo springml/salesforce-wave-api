@@ -41,4 +41,12 @@ public class APIFactory {
             String apiVersion, Integer batchSize) throws Exception {
         return new ForceAPIImpl(new SFConfig(username, password, loginURL, apiVersion, batchSize));
     }
+
+    public ForceAPI forceAPI(String username, String password, String loginURL,
+            String apiVersion, Integer batchSize, Integer maxRetry) throws Exception {
+        SFConfig sfConfig = new SFConfig(username, password, loginURL, apiVersion, batchSize);
+        sfConfig.setMaxRetry(maxRetry);
+        return new ForceAPIImpl(sfConfig);
+    }
+
 }
