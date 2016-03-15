@@ -16,4 +16,10 @@ public class APIFactoryTest {
         ForceAPI forceAPI = APIFactory.getInstance().forceAPI("username", "password", "http://login.salesforce.com");
         assertNotNull(forceAPI);
     }
+
+    @Test
+    public void bulkAPITest() throws Exception {
+        BulkAPI bulkAPI = APIFactory.getInstance().bulkAPI("username", "password", "http://login.salesforce.com", "36.0");
+        assertNotNull(bulkAPI);
+    }
 }

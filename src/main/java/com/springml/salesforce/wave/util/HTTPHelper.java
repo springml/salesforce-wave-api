@@ -25,39 +25,66 @@ public class HTTPHelper {
     private static final Logger LOG = Logger.getLogger(HTTPHelper.class);
 
     public String post(URI uri, String sessionId, String request) throws Exception {
+        return post(uri, sessionId, request, CONTENT_TYPE_APPLICATION_JSON, false);
+    }
+
+    public String post(URI uri, String sessionId, String request, boolean isBulk) throws Exception {
+        return post(uri, sessionId, request, CONTENT_TYPE_APPLICATION_JSON, isBulk);
+    }
+
+    public String post(URI uri, String sessionId, String request, String contentType, boolean isBulk) throws Exception {
         LOG.info("Executing POST request on " + uri);
         LOG.debug("Sending request " + request);
+        LOG.debug("Content-Type " + contentType);
 
         StringEntity entity = new StringEntity(request, STR_UTF_8);
-        entity.setContentType(HEADER_APPLICATION_JSON);
+        if (contentType != null) {
+            entity.setContentType(contentType);
+        } else {
+            LOG.debug("As Content-Type is null " + CONTENT_TYPE_APPLICATION_JSON + " Content-Type is used");
+            entity.setContentType(CONTENT_TYPE_APPLICATION_JSON);
+        }
 
         HttpPost httpPost = new HttpPost(uri);
         httpPost.setEntity(entity);
         httpPost.setConfig(getRequestConfig());
-        httpPost.addHeader(HEADER_AUTH, HEADER_OAUTH + sessionId);
+        if (isBulk) {
+            httpPost.addHeader(HEADER_X_SFDC_SESSION, sessionId);
+        } else {
+            httpPost.addHeader(HEADER_AUTH, HEADER_OAUTH + sessionId);
+        }
+
         return execute(uri, httpPost);
     }
 
-    public String get(URI uri, String sessionId) throws Exception {
+    public String get(URI uri, String sessionId, Integer batchSize, boolean isBulk) throws Exception {
         LOG.info("Executing GET request on " + uri);
         HttpGet httpGet = new HttpGet(uri);
         httpGet.setConfig(getRequestConfig());
-        httpGet.addHeader(HEADER_AUTH, HEADER_OAUTH + sessionId);
-        httpGet.addHeader(HEADER_ACCEPT, HEADER_APPLICATION_JSON);
-        return execute(uri, httpGet);
-    }
+        if (isBulk) {
+            httpGet.addHeader(HEADER_X_SFDC_SESSION, sessionId);
+        } else {
+            httpGet.addHeader(HEADER_AUTH, HEADER_OAUTH + sessionId);
+            httpGet.addHeader(HEADER_ACCEPT, CONTENT_TYPE_APPLICATION_JSON);
+        }
 
-    public String get(URI uri, String sessionId, Integer batchSize) throws Exception {
-        LOG.info("Executing GET request on " + uri);
-        HttpGet httpGet = new HttpGet(uri);
-        httpGet.setConfig(getRequestConfig());
-        httpGet.addHeader(HEADER_AUTH, HEADER_OAUTH + sessionId);
-        httpGet.addHeader(HEADER_ACCEPT, HEADER_APPLICATION_JSON);
         if (batchSize != null && batchSize != 0) {
             httpGet.addHeader(HEADER_SF_QUERY_OPTIONS, HEADER_BATCH_SIZE + batchSize);
         }
 
         return execute(uri, httpGet);
+    }
+
+    public String get(URI uri, String sessionId, Integer batchSize) throws Exception {
+        return get(uri, sessionId, batchSize, false);
+    }
+
+    public String get(URI uri, String sessionId, boolean isBulk) throws Exception {
+        return get(uri, sessionId, null, isBulk);
+    }
+
+    public String get(URI uri, String sessionId) throws Exception {
+        return get(uri, sessionId, null);
     }
 
     private String execute(URI uri, HttpUriRequest httpReq) throws Exception {

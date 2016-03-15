@@ -115,6 +115,10 @@ public class SFConfig {
         return connection.getConfig().getSessionId();
     }
 
+    public String getSessionId() throws Exception {
+        return getPartnerConnection().getConfig().getSessionId();
+    }
+
     public URI getRequestURI(PartnerConnection connection, String path) throws URISyntaxException {
         return getRequestURI(connection, path, null);
     }

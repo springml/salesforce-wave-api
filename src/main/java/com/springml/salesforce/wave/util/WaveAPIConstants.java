@@ -9,20 +9,30 @@ public class WaveAPIConstants {
     public static final String STR_LIMIT_BTW_SPACE = " limit ";
     public static final String STR_OFFSET_BTW_SPACE = " offset ";
     public static final String STR_ATTRIBUTES = "attributes";
+    public static final String STR_CSV = "CSV";
+    public static final String STR_UPDATE = "update";
+    public static final String STR_CLOSED = "Closed";
+    public static final String STR_COMPLETED = "Completed";
 
-    public static final String HEADER_APPLICATION_JSON = "application/json";
+    public static final String CONTENT_TYPE_APPLICATION_JSON = "application/json";
+    public static final String CONTENT_TYPE_TEXT_CSV= "text/csv";
+
     public static final String HEADER_ACCEPT = "Accept";
     public static final String HEADER_AUTH = "Authorization";
+    public static final String HEADER_X_SFDC_SESSION = "X-SFDC-Session";
     public static final String HEADER_OAUTH = "OAuth ";
     public static final String HEADER_SF_QUERY_OPTIONS = "Sforce-Query-Options";
     public static final String HEADER_BATCH_SIZE = "batchSize=";
 
     public static final String SERVICE_PATH = "/services/data/";
+    public static final String SERVICE_ASYNC_PATH = "/services/async/";
     public static final String API_VERSION = "35.0";
     public static final String PATH_WAVE_QUERY = "/wave/query";
     public static final String PATH_SOAP_ENDPOINT = "/services/Soap/u/" + API_VERSION;
     public static final String SERVICE_PATH_WAVE_QUERY = SERVICE_PATH + "v" + API_VERSION + PATH_WAVE_QUERY;
     public static final String PATH_QUERY = "/query";
+    public static final String PATH_JOB = "/job";
+    public static final String PATH_BATCH = "/batch";
     public static final String SERVICE_PATH_QUERY = SERVICE_PATH + "v" + API_VERSION + PATH_QUERY;
     public static final String QUERY_PARAM = "q=";
 

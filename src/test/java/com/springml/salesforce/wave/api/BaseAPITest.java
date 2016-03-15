@@ -13,6 +13,7 @@ import com.springml.salesforce.wave.util.SFConfig;
 public abstract class BaseAPITest {
     protected static final String SERVICE_ENDPOINT = "http://gs0.salesforce.com";
     protected static final String SESSION_ID = "dummySessionId";
+    protected static final String API_VERSION = "36.0";
 
     protected SFConfig sfConfig = null;
     protected HTTPHelper httpHelper = null;
@@ -24,6 +25,8 @@ public abstract class BaseAPITest {
 
         sfConfig = mock(SFConfig.class);
         when(sfConfig.getPartnerConnection()).thenReturn(conn);
+        when(sfConfig.getSessionId()).thenReturn(SESSION_ID);
+        when(sfConfig.getApiVersion()).thenReturn(API_VERSION);
 
         objectMapper = new ObjectMapper();
         objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
