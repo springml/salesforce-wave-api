@@ -1,6 +1,13 @@
 package com.springml.salesforce.wave.model;
 
-public class BatchInfo {
+import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties
+public class BatchInfo implements Serializable {
+    private static final long serialVersionUID = 3366976509102917086L;
+
     private String id;
     private String jobId;
     private String state;

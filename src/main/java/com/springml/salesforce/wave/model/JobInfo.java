@@ -1,6 +1,13 @@
 package com.springml.salesforce.wave.model;
 
-public class JobInfo {
+import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties
+public class JobInfo implements Serializable {
+    private static final long serialVersionUID = 2403943099992427787L;
+
     private String contentType;
     private String object;
     private String operation;
