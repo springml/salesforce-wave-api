@@ -101,7 +101,7 @@ public class BulkAPITest extends BaseAPITest {
     @Test
     @Ignore("This can be only executed with actual salesforce username and password")
     public void testBulkAPI() throws Exception {
-        BulkAPI batchAPI = APIFactory.getInstance().bulkAPI("sparktest@springml.com", "ABcd12..2fJh4HXenlNCzIn3nGfcMuHE",
+        BulkAPI batchAPI = APIFactory.getInstance().bulkAPI("xxx@xxx.com", "xxxx",
                 "https://login.salesforce.com", API_VERSION);
         JobInfo jobInfo = batchAPI.createJob(STR_CONTACT);
         assertEquals(STR_CONTACT, jobInfo.getObject());

@@ -34,7 +34,7 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
         String response = getHttpHelper().post(requestURI, getSfConfig().getSessionId(),
                 getObjectMapper().writeValueAsString(jobInfo), true);
         LOG.debug("Response from Salesforce Server " + response);
-        System.out.println("Response : " + response);
+
         return getObjectMapper().readValue(response.getBytes(), JobInfo.class);
     }
 
@@ -45,7 +45,6 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
         String response = getHttpHelper().post(requestURI, getSfConfig().getSessionId(),
                 csvContent, CONTENT_TYPE_TEXT_CSV, true);
         LOG.debug("Response from Salesforce Server " + response);
-        System.out.println("Response : " + response);
 
         // Response is in xml though Accept is set to application/json
         return getXmlMapper().readValue(response.getBytes(), BatchInfo.class);
@@ -59,7 +58,6 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
         String response = getHttpHelper().post(requestURI, getSfConfig().getSessionId(),
                 getObjectMapper().writeValueAsString(jobInfo), true);
         LOG.debug("Response from Salesforce Server " + response);
-        System.out.println("Response : " + response);
 
         return getObjectMapper().readValue(response.getBytes(), JobInfo.class);
     }
@@ -84,7 +82,6 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
         String response = getHttpHelper().get(requestURI, getSfConfig().getSessionId(), true);
         LOG.debug("Response from Salesforce Server " + response);
 
-        System.out.println("Response : " + response);
         return getXmlMapper().readValue(response.getBytes(), BatchInfoList.class);
     }
 
@@ -94,7 +91,6 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
 
         String response = getHttpHelper().get(requestURI, getSfConfig().getSessionId(), true);
         LOG.debug("Response from Salesforce Server " + response);
-        System.out.println("Response : " + response);
 
         return getXmlMapper().readValue(response.getBytes(), BatchInfo.class);
     }
