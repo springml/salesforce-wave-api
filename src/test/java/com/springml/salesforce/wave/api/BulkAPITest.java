@@ -101,24 +101,24 @@ public class BulkAPITest extends BaseAPITest {
     @Test
     @Ignore("This can be only executed with actual salesforce username and password")
     public void testBulkAPI() throws Exception {
-        BulkAPI batchAPI = APIFactory.getInstance().bulkAPI("xxx@xxx.com", "xxxx",
+        BulkAPI bulkAPI = APIFactory.getInstance().bulkAPI("xxx@xxx.com", "xxxx",
                 "https://login.salesforce.com", API_VERSION);
-        JobInfo jobInfo = batchAPI.createJob(STR_CONTACT);
+        JobInfo jobInfo = bulkAPI.createJob(STR_CONTACT);
         assertEquals(STR_CONTACT, jobInfo.getObject());
         assertNotNull(jobInfo.getId());
 
         String jobId = jobInfo.getId();
-        BatchInfo batch = batchAPI.addBatch(jobId, ADD_BATCH_REQUEST);
+        BatchInfo batch = bulkAPI.addBatch(jobId, ADD_BATCH_REQUEST);
         assertEquals(jobId, batch.getJobId());
         assertNotNull(batch.getId());
 
-        JobInfo closeJob = batchAPI.closeJob(jobId);
+        JobInfo closeJob = bulkAPI.closeJob(jobId);
         assertEquals(jobId, closeJob.getId());
         assertEquals("Closed", closeJob.getState());
 
         // Since the batch is very small, just sleeping for 5 seconds
         Thread.sleep(5000);
-        assertTrue(batchAPI.isCompleted(jobId));
+        assertTrue(bulkAPI.isCompleted(jobId));
     }
 
     @Test
