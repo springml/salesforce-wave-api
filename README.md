@@ -18,8 +18,8 @@ This library requires Salesforce username, Salesforce password and Salesforce lo
 ### Querying a dataset
 This library can be used 
 * To query a dataset using [SAQL] (https://developer.salesforce.com/docs/atlas.en-us.bi_dev_guide_eql.meta/bi_dev_guide_eql/). Refer [WaveAPITest.java] (https://github.com/springml/salesforce-wave-api/blob/master/src/test/java/com/springml/salesforce/wave/api/WaveAPITest.java) for querying a dataset from Salesforce Wave
-* To query salesforce object using [SOQL] (https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/). Refer [ForceAPITest.java] (https://github.com/springml/salesforce-wave-api/blob/master/src/test/java/com/springml/salesforce/wave/api/ForceAPITest.java) for querying Salesforce object
-* To update salesforce object using [REST Bulk API] (https://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/). Refer [BulkAPITest.java] (https://github.com/springml/salesforce-wave-api/blob/master/src/test/java/com/springml/salesforce/wave/api/BulkAPITest.java) for updating Salesforce object
+* To query Salesforce object using [SOQL] (https://developer.salesforce.com/docs/atlas.en-us.soql_sosl.meta/soql_sosl/). Refer [ForceAPITest.java] (https://github.com/springml/salesforce-wave-api/blob/master/src/test/java/com/springml/salesforce/wave/api/ForceAPITest.java) for querying Salesforce object
+* To update Salesforce object using [REST Bulk API] (https://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/). Refer [BulkAPITest.java] (https://github.com/springml/salesforce-wave-api/blob/master/src/test/java/com/springml/salesforce/wave/api/BulkAPITest.java) for updating Salesforce object
 
 ### Maven Dependency
 ```
@@ -71,10 +71,11 @@ while (!result.isDone()) {
 ### Example Usage to update Salesforce objects using Bulk API
 ```java
 import com.springml.salesforce.wave.api.APIFactory
-import com.springml.salesforce.wave.api.ForceAPI;
-import com.springml.salesforce.wave.model.SOQLResult;
+import com.springml.salesforce.wave.api.BulkAPI;
+import com.springml.salesforce.wave.model.JobInfo;
+import com.springml.salesforce.wave.model.BatchInfo;
 
-BulkAPI batchAPI = APIFactory.getInstance().bulkAPI("salesforce_username", 
+BulkAPI bulkAPI = APIFactory.getInstance().bulkAPI("salesforce_username", 
 		"salesforce_password_appended_with_security_token",
         "https://login.salesforce.com", "36.0");
 // Here we are updating Contact
@@ -85,7 +86,7 @@ String jobId = jobInfo.getId();
 // And further columns should contain the fields to be updated
 // Here Description is updated for two Contacts
 String csvContent = "Id,Description\n003B00000067Rnx,SuperMan\n003B00000067Rnw,SpiderMan";
-// Like below, all the batches has to be added
+// Adding batch to the created Job
 // Please note that, csvContent should not exceed 10MB
 // Add multiple batches if the content to be updated is more than 10 MB
 BatchInfo batch = bulkAPI.addBatch(jobId, csvContent);
