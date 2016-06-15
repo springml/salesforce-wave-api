@@ -137,4 +137,12 @@ public class SFConfig {
                 loginURI.getPort(), PATH_SOAP_ENDPOINT, null, null).toString();
     }
 
+    public void closeConnection() throws Exception {
+        if (this.partnerConnection != null) {
+            this.partnerConnection.logout();
+        }
+
+        this.partnerConnection = null;
+    }
+
 }

@@ -31,6 +31,9 @@ public class WaveAPIConstants {
     public static final String PATH_SOAP_ENDPOINT = "/services/Soap/u/" + API_VERSION;
     public static final String SERVICE_PATH_WAVE_QUERY = SERVICE_PATH + "v" + API_VERSION + PATH_WAVE_QUERY;
     public static final String PATH_QUERY = "/query";
+    public static final String PATH_TASK = "/sobjects/task";
+    public static final String PATH_CHATTER = "/chatter";
+    public static final String PATH_FEED_ELEMENTS = "/feed-elements";
     public static final String PATH_JOB = "/job";
     public static final String PATH_BATCH = "/batch";
     public static final String SERVICE_PATH_QUERY = SERVICE_PATH + "v" + API_VERSION + PATH_QUERY;

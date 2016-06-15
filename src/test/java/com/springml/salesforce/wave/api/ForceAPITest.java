@@ -13,6 +13,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.springml.salesforce.wave.impl.ForceAPIImpl;
+import com.springml.salesforce.wave.model.AddTaskRequest;
+import com.springml.salesforce.wave.model.AddTaskResponse;
 import com.springml.salesforce.wave.model.SOQLResult;
 import com.springml.salesforce.wave.util.HTTPHelper;
 
@@ -130,5 +132,47 @@ public class ForceAPITest extends BaseAPITest {
         } catch (Exception e) {
             // Expected
         }
+    }
+
+    @Test
+    public void testAddTask() throws Exception {
+        ForceAPI forceAPI = APIFactory.getInstance().forceAPI("dummyusername",
+                "dummypassword", "https://login.salesforce.com");
+        when(httpHelper.post(any(URI.class), anyString(), anyString())).
+                thenReturn("{\"id\":\"00TB0000003LgMzMAK\",\"success\":true,\"errors\":[]}");
+        ((ForceAPIImpl) forceAPI).setHttpHelper(httpHelper);
+        ((ForceAPIImpl) forceAPI).setSfConfig(sfConfig);
+        ((ForceAPIImpl) forceAPI).setObjectMapper(objectMapper);
+
+        AddTaskRequest addTaskRequest = new AddTaskRequest();
+        addTaskRequest.setObjId("005B0000001JxGxIAK");
+        addTaskRequest.setSubject("Test task");
+        addTaskRequest.setOwnerId("006B0000002nBrQ");
+
+        AddTaskResponse response = forceAPI.addTask(addTaskRequest);
+        assertNotNull(response);
+        assertTrue(response.isSuccess());
+        assertNotNull(response.getId());
+    }
+
+    @Test
+    public void testAddTaskNegativeCase() throws Exception {
+        ForceAPI forceAPI = APIFactory.getInstance().forceAPI("dummyusername",
+                "dummypassword", "https://login.salesforce.com");
+        when(httpHelper.post(any(URI.class), anyString(), anyString())).
+                thenReturn("[{\"message\":\"Related To ID: id value of incorrect type: invalid\",\"errorCode\":\"MALFORMED_ID\",\"fields\":[\"WhatId\"]}]");
+        ((ForceAPIImpl) forceAPI).setHttpHelper(httpHelper);
+        ((ForceAPIImpl) forceAPI).setSfConfig(sfConfig);
+        ((ForceAPIImpl) forceAPI).setObjectMapper(objectMapper);
+
+        AddTaskRequest addTaskRequest = new AddTaskRequest();
+        addTaskRequest.setObjId("005B0000001JxGxIAK");
+        addTaskRequest.setSubject("Test task");
+        addTaskRequest.setOwnerId("invalid");
+
+        AddTaskResponse response = forceAPI.addTask(addTaskRequest);
+        assertNotNull(response);
+        assertFalse(response.isSuccess());
+        assertTrue(response.getError().contains("invalid"));
     }
 }

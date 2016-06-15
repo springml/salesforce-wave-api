@@ -86,10 +86,7 @@ public class WaveAPIImpl extends AbstractAPIImpl implements WaveAPI {
 
     private void closePartnerConnection() {
         try {
-            PartnerConnection connection = getSfConfig().getPartnerConnection();
-            if (connection != null) {
-                connection.logout();
-            }
+            getSfConfig().closeConnection();
         } catch (Exception e) {
             LOG.warn("Error while closing PartnerConnection", e);
         }

@@ -2,11 +2,14 @@ package com.springml.salesforce.wave.impl;
 
 import static com.springml.salesforce.wave.util.WaveAPIConstants.*;
 
+import java.io.IOException;
 import java.net.URI;
 
 import org.apache.log4j.Logger;
 
 import com.springml.salesforce.wave.api.ForceAPI;
+import com.springml.salesforce.wave.model.AddTaskRequest;
+import com.springml.salesforce.wave.model.AddTaskResponse;
 import com.springml.salesforce.wave.model.SOQLResult;
 import com.springml.salesforce.wave.util.SFConfig;
 
@@ -41,6 +44,37 @@ public class ForceAPIImpl extends AbstractAPIImpl implements ForceAPI {
         return query(requestURI, 1);
     }
 
+    public AddTaskResponse addTask(AddTaskRequest addTask) throws Exception {
+        SFConfig sfConfig = getSfConfig();
+        String taskPath = getTaskPath(sfConfig);
+        URI taskURI = sfConfig.getRequestURI(
+                sfConfig.getPartnerConnection(), taskPath);
+
+        String request = getObjectMapper().writeValueAsString(addTask);
+        String responseStr = getHttpHelper().post(taskURI, getSfConfig().getSessionId(), request);
+
+        AddTaskResponse response = null;
+        try {
+            response = getObjectMapper().readValue(responseStr.getBytes(), AddTaskResponse.class);
+        } catch (IOException e) {
+            response = new AddTaskResponse();
+            response.setError(responseStr);
+            response.setSuccess(false);
+        }
+
+        return response;
+    }
+
+    private String getTaskPath(SFConfig sfConfig) {
+        StringBuilder taskPath = new StringBuilder();
+        taskPath.append(SERVICE_PATH);
+        taskPath.append("v");
+        taskPath.append(sfConfig.getApiVersion());
+        taskPath.append(PATH_TASK);
+
+        return taskPath.toString();
+    }
+
     private SOQLResult query(URI queryURI, int attempt) throws Exception {
         SOQLResult soqlResult = null;
         try {
@@ -63,7 +97,7 @@ public class ForceAPIImpl extends AbstractAPIImpl implements ForceAPI {
         } finally {
             if (getSfConfig().getPartnerConnection() != null && soqlResult != null && soqlResult.isDone()) {
                 try {
-                    getSfConfig().getPartnerConnection().logout();
+                    getSfConfig().closeConnection();
                 } catch (Exception e) {
                     LOG.warn("Error while closing PartnerConnection", e);
                 }

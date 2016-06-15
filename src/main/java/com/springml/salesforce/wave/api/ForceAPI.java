@@ -1,5 +1,7 @@
 package com.springml.salesforce.wave.api;
 
+import com.springml.salesforce.wave.model.AddTaskRequest;
+import com.springml.salesforce.wave.model.AddTaskResponse;
 import com.springml.salesforce.wave.model.QueryResult;
 import com.springml.salesforce.wave.model.SOQLResult;
 
@@ -17,9 +19,15 @@ public interface ForceAPI {
 
     /**
      * Query further records using nextRecordsURL
-     * @param oldResult 
+     * @param oldResult
      * @return
      * @throws Exception
      */
     public SOQLResult queryMore(SOQLResult oldResult) throws Exception;
+
+    /**
+     * Creates task with given details in salesforce
+     * @return
+     */
+    public AddTaskResponse addTask(AddTaskRequest addTask) throws Exception;
 }
