@@ -1,0 +1,152 @@
+{
+    "actor": {
+        "additionalLabel": null,
+        "communityNickname": "sparktest",
+        "companyName": "springML Inc",
+        "displayName": "Spark Test",
+        "firstName": "Spark",
+        "id": "006B0000002ne2134IAA",
+        "isActive": true,
+        "isInThisCommunity": true,
+        "lastName": "Test",
+        "motif": {
+            "color": "65CAE4",
+            "largeIconUrl": "/img/icon/profile64.png",
+            "mediumIconUrl": "/img/icon/profile32.png",
+            "smallIconUrl": "/img/icon/profile16.png",
+            "svgIconUrl": null
+        },
+        "mySubscription": null,
+        "name": "Spark Test",
+        "photo": {
+            "fullEmailPhotoUrl": "https://psdev.my.salesforce.com/img/userprofile/default_profile_200.png?fromEmail=1",
+            "largePhotoUrl": "https://psdev--c.gus.content.force.com/profilephoto/005/F",
+            "photoVersionId": null,
+            "smallPhotoUrl": "https://psdev--c.gus.content.force.com/profilephoto/005/T",
+            "standardEmailPhotoUrl": "https://psdev.my.salesforce.com/img/userprofile/default_profile_45.png?fromEmail=1",
+            "url": "/services/data/v36.0/connect/user-profiles/006B0000002ne2134IAA/photo"
+        },
+        "reputation": null,
+        "title": null,
+        "type": "User",
+        "url": "/services/data/v36.0/chatter/users/006B0000002ne2134IAA",
+        "userType": "Internal"
+    },
+    "body": {
+        "isRichText": false,
+        "messageSegments": [
+            {
+                "text": "Great Opportunity",
+                "type": "Text"
+            }
+        ],
+        "text": "Great Opportunity"
+    },
+    "canShare": false,
+    "capabilities": {
+        "associatedActions": {
+            "platformActionGroups": []
+        },
+        "bookmarks": {
+            "isBookmarkedByCurrentUser": false
+        },
+        "chatterLikes": {
+            "isLikedByCurrentUser": false,
+            "likesMessage": null,
+            "myLike": null,
+            "page": {
+                "currentPageUrl": "/services/data/v36.0/chatter/feed-elements/0D5B0000007O5x8KAC/capabilities/chatter-likes/items",
+                "items": [],
+                "nextPageUrl": null,
+                "previousPageUrl": null,
+                "total": 0
+            }
+        },
+        "comments": {
+            "page": {
+                "currentPageUrl": "/services/data/v36.0/chatter/feed-elements/0D5B0000007O5x8KAC/capabilities/comments/items",
+                "items": [],
+                "nextPageUrl": null,
+                "total": 0
+            }
+        },
+        "mute": {
+            "isMutedByMe": false
+        },
+        "topics": {
+            "canAssignTopics": true,
+            "items": []
+        }
+    },
+    "clientInfo": {
+        "applicationName": "Chatter Bot",
+        "applicationUrl": null
+    },
+    "createdDate": "2016-06-14T11:21:51.000Z",
+    "event": false,
+    "feedElementType": "FeedItem",
+    "header": {
+        "isRichText": null,
+        "messageSegments": [
+            {
+                "motif": {
+                    "color": "FCB95B",
+                    "largeIconUrl": "/img/icon/opportunities64.png",
+                    "mediumIconUrl": "/img/icon/opportunities32.png",
+                    "smallIconUrl": "/img/icon/opportunities16.png",
+                    "svgIconUrl": null
+                },
+                "reference": {
+                    "id": "006B0000002ne39IAA",
+                    "url": "/services/data/v36.0/chatter/records/006B0000002ne39IAA"
+                },
+                "text": "Sample Opportunity",
+                "type": "EntityLink"
+            },
+            {
+                "text": " — ",
+                "type": "Text"
+            },
+            {
+                "motif": {
+                    "color": "65CAE4",
+                    "largeIconUrl": "/img/icon/profile64.png",
+                    "mediumIconUrl": "/img/icon/profile32.png",
+                    "smallIconUrl": "/img/icon/profile16.png",
+                    "svgIconUrl": null
+                },
+                "reference": {
+                    "id": "006B0000002ne2134IAA",
+                    "url": "/services/data/v36.0/chatter/users/006B0000002ne2134IAA"
+                },
+                "text": "Spark Test",
+                "type": "EntityLink"
+            }
+        ],
+        "text": "Sample Opportunity — Spark Test"
+    },
+    "id": "0D5B0000007O5x8KAC",
+    "isDeleteRestricted": false,
+    "modifiedDate": "2016-06-14T11:21:51.000Z",
+    "originalFeedItem": null,
+    "originalFeedItemActor": null,
+    "parent": {
+        "id": "006B0000002ne39IAA",
+        "motif": {
+            "color": "FCB95B",
+            "largeIconUrl": "/img/icon/opportunities64.png",
+            "mediumIconUrl": "/img/icon/opportunities32.png",
+            "smallIconUrl": "/img/icon/opportunities16.png",
+            "svgIconUrl": null
+        },
+        "mySubscription": null,
+        "name": "Sample Opportunity",
+        "type": "Opportunity",
+        "url": "/services/data/v36.0/chatter/records/006B0000002ne39IAA"
+    },
+    "photoUrl": "https://psdev--c.gus.content.force.com/profilephoto/005/T",
+    "relativeCreatedDate": "Just Now",
+    "type": "TextPost",
+    "url": "/services/data/v36.0/chatter/feed-elements/0D5B0000007O5x8KAC",
+    "visibility": "InternalUsers"
+}

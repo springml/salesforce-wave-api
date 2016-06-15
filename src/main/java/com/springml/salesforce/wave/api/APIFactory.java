@@ -1,6 +1,7 @@
 package com.springml.salesforce.wave.api;
 
 import com.springml.salesforce.wave.impl.BulkAPIImpl;
+import com.springml.salesforce.wave.impl.ChatterAPIImpl;
 import com.springml.salesforce.wave.impl.ForceAPIImpl;
 import com.springml.salesforce.wave.impl.WaveAPIImpl;
 import com.springml.salesforce.wave.util.SFConfig;
@@ -53,5 +54,10 @@ public class APIFactory {
     public BulkAPI bulkAPI(String username, String password, String loginURL, String apiVersion) throws Exception {
         SFConfig sfConfig = new SFConfig(username, password, loginURL, apiVersion);
         return new BulkAPIImpl(sfConfig);
+    }
+
+    public ChatterAPI chatterAPI(String username, String password, String loginURL, String apiVersion) throws Exception {
+        SFConfig sfConfig = new SFConfig(username, password, loginURL, apiVersion);
+        return new ChatterAPIImpl(sfConfig);
     }
 }
