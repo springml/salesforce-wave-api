@@ -10,6 +10,7 @@ import java.util.Arrays;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.sforce.soap.partner.PartnerConnection;
@@ -39,6 +40,18 @@ public class ChatterAPITest extends BaseAPITest {
         PostMessageRequest req = constructPostMessage();
         String requestStr = objectMapper.writeValueAsString(req);
         when(httpHelper.post(uri, sfConfig.getSessionId(), requestStr)).thenReturn(responseJson);
+    }
+
+    @Test
+    @Ignore
+    public void testRealPostMessage() throws Exception {
+        PostMessageRequest req = constructPostMessage();
+
+        ChatterAPI chatterAPI = APIFactory.getInstance().chatterAPI("testacoount@sf.com",
+                "PASSWORDSECURITYCODE", "https://login.salesforce.com", "36.0");
+
+        PostMessageResponse postMessage = chatterAPI.postMessage(req);
+        validate(postMessage);
     }
 
     @Test

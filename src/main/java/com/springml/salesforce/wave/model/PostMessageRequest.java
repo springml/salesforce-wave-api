@@ -1,7 +1,10 @@
 package com.springml.salesforce.wave.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.springml.salesforce.wave.model.chatter.MessageBody;
 
+@JsonInclude(Include.NON_NULL)
 public class PostMessageRequest {
     private String feedElementType;
     private String subjectId;

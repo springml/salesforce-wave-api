@@ -1,5 +1,9 @@
 package com.springml.salesforce.wave.model.chatter;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+@JsonInclude(Include.NON_NULL)
 public class MessageElement {
     private String type;
     private String text;

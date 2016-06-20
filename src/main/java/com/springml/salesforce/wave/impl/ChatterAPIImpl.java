@@ -5,6 +5,8 @@ import static com.springml.salesforce.wave.util.WaveAPIConstants.*;
 import java.net.URI;
 import java.util.Arrays;
 
+import org.apache.log4j.Logger;
+
 import com.springml.salesforce.wave.api.ChatterAPI;
 import com.springml.salesforce.wave.model.PostMessageRequest;
 import com.springml.salesforce.wave.model.chatter.MessageBody;
@@ -13,6 +15,7 @@ import com.springml.salesforce.wave.model.chatter.PostMessageResponse;
 import com.springml.salesforce.wave.util.SFConfig;
 
 public class ChatterAPIImpl extends AbstractAPIImpl implements ChatterAPI {
+    private static final Logger LOG = Logger.getLogger(ChatterAPIImpl.class);
 
     public ChatterAPIImpl(SFConfig sfConfig) throws Exception {
         super(sfConfig);
@@ -25,6 +28,8 @@ public class ChatterAPIImpl extends AbstractAPIImpl implements ChatterAPI {
                 sfConfig.getPartnerConnection(), feddElementsPath);
 
         String requestStr = getObjectMapper().writeValueAsString(request);
+        System.out.println("requestStr : " + requestStr);
+        LOG.debug("Post Message Request " + requestStr);
         String responseStr = getHttpHelper().post(taskURI, getSfConfig().getSessionId(), requestStr);
 
         return getObjectMapper().readValue(responseStr.getBytes(), PostMessageResponse.class);
