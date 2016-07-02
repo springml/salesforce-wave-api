@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 import com.springml.salesforce.wave.api.ForceAPI;
 import com.springml.salesforce.wave.model.AddTaskRequest;
 import com.springml.salesforce.wave.model.AddTaskResponse;
+import com.springml.salesforce.wave.model.ForceResponse;
 import com.springml.salesforce.wave.model.SOQLResult;
 import com.springml.salesforce.wave.util.SFConfig;
 
@@ -63,6 +64,37 @@ public class ForceAPIImpl extends AbstractAPIImpl implements ForceAPI {
         }
 
         return response;
+    }
+
+    public ForceResponse insertObject(String object, String jsonContent) throws Exception {
+        SFConfig sfConfig = getSfConfig();
+        String insertPath = getInsertPath(sfConfig, object);
+        URI taskURI = sfConfig.getRequestURI(
+                sfConfig.getPartnerConnection(), insertPath);
+
+        String responseStr = getHttpHelper().post(taskURI, getSfConfig().getSessionId(), jsonContent);
+
+        ForceResponse response = null;
+        try {
+            response = getObjectMapper().readValue(responseStr.getBytes(), ForceResponse.class);
+        } catch (IOException e) {
+            response = new ForceResponse();
+            response.setError(responseStr);
+            response.setSuccess(false);
+        }
+
+        return response;
+    }
+
+    private String getInsertPath(SFConfig sfConfig, String object) {
+        StringBuilder objPath = new StringBuilder();
+        objPath.append(SERVICE_PATH);
+        objPath.append("v");
+        objPath.append(sfConfig.getApiVersion());
+        objPath.append(PATH_SOBJECTS);
+        objPath.append(object);
+
+        return objPath.toString();
     }
 
     private String getTaskPath(SFConfig sfConfig) {

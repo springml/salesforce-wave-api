@@ -15,6 +15,7 @@ import org.junit.Test;
 import com.springml.salesforce.wave.impl.ForceAPIImpl;
 import com.springml.salesforce.wave.model.AddTaskRequest;
 import com.springml.salesforce.wave.model.AddTaskResponse;
+import com.springml.salesforce.wave.model.ForceResponse;
 import com.springml.salesforce.wave.model.SOQLResult;
 import com.springml.salesforce.wave.util.HTTPHelper;
 
@@ -175,4 +176,23 @@ public class ForceAPITest extends BaseAPITest {
         assertFalse(response.isSuccess());
         assertTrue(response.getError().contains("invalid"));
     }
+
+    @Test
+    public void testInsertObject() throws Exception {
+        ForceAPI forceAPI = APIFactory.getInstance().forceAPI("dummyusername",
+                "dummypassword", "https://login.salesforce.com");
+        when(httpHelper.post(any(URI.class), anyString(), anyString())).
+                thenReturn("{\"id\":\"00TB0000003LgMzMAK\",\"success\":true,\"errors\":[]}");
+        ((ForceAPIImpl) forceAPI).setHttpHelper(httpHelper);
+        ((ForceAPIImpl) forceAPI).setSfConfig(sfConfig);
+        ((ForceAPIImpl) forceAPI).setObjectMapper(objectMapper);
+
+        String inputJson = "{\"Name\":\"Great News\",\"URL__c\":\"http://testURL\",\"published_date__c\":\"2016-07-04T07:37:00.000\"}";
+
+        ForceResponse response = forceAPI.insertObject("TestObject", inputJson);
+        assertNotNull(response);
+        assertTrue(response.isSuccess());
+        assertNotNull(response.getId());
+    }
+
 }

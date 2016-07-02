@@ -2,6 +2,7 @@ package com.springml.salesforce.wave.api;
 
 import com.springml.salesforce.wave.model.AddTaskRequest;
 import com.springml.salesforce.wave.model.AddTaskResponse;
+import com.springml.salesforce.wave.model.ForceResponse;
 import com.springml.salesforce.wave.model.QueryResult;
 import com.springml.salesforce.wave.model.SOQLResult;
 
@@ -30,4 +31,19 @@ public interface ForceAPI {
      * @return
      */
     public AddTaskResponse addTask(AddTaskRequest addTask) throws Exception;
+
+    /**
+     * Insert a salesforce object
+     * @param object - Name of the salesforce object
+     * @param content - Json content of the object to be saved
+     */
+    public ForceResponse insertObject(String object, String content) throws Exception;
+
+    /**
+     * Insert a salesforce object
+     * @param object - Name of the salesforce object
+     * @param content - Json content of the object to be saved
+     */
+//    public InsertObjectsResponse insertObjects(String object, List<String> objects) throws Exception;
+
 }
