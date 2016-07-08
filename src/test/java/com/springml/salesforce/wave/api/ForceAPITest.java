@@ -7,6 +7,8 @@ import static org.mockito.Mockito.*;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -56,6 +58,29 @@ public class ForceAPITest extends BaseAPITest {
 
     @Test
     @Ignore("This can be only executed with actual salesforce username and password")
+    public void testCustomQuery() throws Exception {
+        ForceAPI forceAPI = APIFactory.getInstance().forceAPI("xxx",
+                "xxx", "https://login.salesforce.com");
+
+        String soql= "Select PricebookEntry.Product2.Name From OpportunityLineItem";
+        SOQLResult result = forceAPI.query(soql);
+        System.out.println("result :  " + result);
+        System.out.println("records :  " + result.getRecords());
+        System.out.println("records size :  " + result.getRecords().size());
+        List<Map<String, String>> filterRecords = result.filterRecords();
+        System.out.println("filterRecords : " + filterRecords);
+        for (Map<String, String> map : filterRecords) {
+            Set<Entry<String,String>> entrySet = map.entrySet();
+            for (Entry<String, String> entry : entrySet) {
+                System.out.println("Key : " + entry.getKey());
+                System.out.println("Value : " + entry.getValue());
+            }
+        }
+        assertTrue(result.isDone());
+    }
+
+    @Test
+    @Ignore("This can be only executed with actual salesforce username and password")
     public void testRelationshipQueryWithoutMock() throws Exception {
       ForceAPI forceAPI = APIFactory.getInstance().forceAPI("xxx@xxx.com",
               "***", "https://login.salesforce.com");
@@ -72,6 +97,20 @@ public class ForceAPITest extends BaseAPITest {
       assertEquals("Prospect", filterRecords.get(0).get("Account.Type"));
       assertTrue(result.isDone());
   }
+
+    @Test
+    @Ignore("This can be only executed with actual salesforce username and password")
+    public void testInsertWithoutMock() throws Exception {
+        ForceAPI forceAPI = APIFactory.getInstance().forceAPI("xxx",
+                "xxx", "https://login.salesforce.com");
+
+        String inputJson = "{\"Name\":\"Awesome News\",\"URL__c\":\"http://testURL\",\"published_date__c\":\"2016-07-04T07:37:00.000\"}";
+
+        ForceResponse response = forceAPI.insertObject("News_Update__c", inputJson);
+        assertNotNull(response);
+        assertTrue(response.isSuccess());
+        assertNotNull(response.getId());
+    }
 
     @Test
     public void testQuery() throws Exception {

@@ -101,7 +101,12 @@ public class SOQLResult {
 
         for (Entry<String, Object> entry : entries) {
             if (!entry.getKey().equals(STR_ATTRIBUTES)) {
-                relatedRecords.put(key + "." + entry.getKey(), String.valueOf(entry.getValue()));
+                Object childValue = entry.getValue();
+                if (childValue instanceof Map) {
+                    relatedRecords.putAll(getRelatedRecords(key + "." + entry.getKey(), (Map) childValue));
+                } else {
+                    relatedRecords.put(key + "." + entry.getKey(), String.valueOf(childValue));
+                }
             }
         }
 
