@@ -27,6 +27,12 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
         return createJob(jobInfo);
     }
 
+    public JobInfo createJob(String object, String operation, String contentType) throws Exception {
+        JobInfo jobInfo = new JobInfo(contentType, object, operation);
+
+        return createJob(jobInfo);
+    }
+
     public JobInfo createJob(JobInfo jobInfo) throws Exception {
         PartnerConnection connection = getSfConfig().getPartnerConnection();
         URI requestURI = getSfConfig().getRequestURI(connection, getJobPath());
@@ -69,6 +75,9 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
         if (batchInfos != null) {
             for (BatchInfo batchInfo : batchInfos) {
                 isCompleted = STR_COMPLETED.equals(batchInfo.getState());
+                if (STR_FAILED.equals(batchInfo.getState())) {
+                    throw new Exception("Batch '" + batchInfo.getId() + "' failed with error '" + batchInfo.getStateMessage() + "'");
+                }
             }
         }
 
@@ -93,6 +102,11 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
         LOG.debug("Response from Salesforce Server " + response);
 
         return getXmlMapper().readValue(response.getBytes(), BatchInfo.class);
+    }
+
+    public boolean isSuccess(String jobId) throws Exception {
+        // TODO Auto-generated method stub
+        return false;
     }
 
     private String getBatchPath(String jobId, String batchId) {
@@ -126,4 +140,5 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
         jobPath.append(PATH_JOB);
         return jobPath.toString();
     }
+
 }

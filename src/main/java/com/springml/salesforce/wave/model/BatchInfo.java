@@ -11,6 +11,7 @@ public class BatchInfo implements Serializable {
     private String id;
     private String jobId;
     private String state;
+    private String stateMessage;
     private String createdDate;
     private String systemModstamp;
     private String numberRecordsProcessed;
@@ -97,6 +98,14 @@ public class BatchInfo implements Serializable {
 
     public void setApexProcessingTime(String apexProcessingTime) {
         this.apexProcessingTime = apexProcessingTime;
+    }
+
+    public String getStateMessage() {
+        return stateMessage;
+    }
+
+    public void setStateMessage(String stateMessage) {
+        this.stateMessage = stateMessage;
     }
 
 }

@@ -21,6 +21,15 @@ public interface BulkAPI {
     /**
      * Create a new Bulk Job
      * https://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/asynch_api_quickstart_create_job.htm
+     * @param The Salesforce object to be updated
+     * @return @JobInfo
+     * @throws Exception
+     */
+    public JobInfo createJob(String object, String operation, String contentType) throws Exception;
+
+    /**
+     * Create a new Bulk Job
+     * https://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/asynch_api_quickstart_create_job.htm
      * @param jobInfo with details of the Job to be created
      * @return {@link JobInfo}
      * @throws Exception
@@ -53,6 +62,15 @@ public interface BulkAPI {
      * @throws Exception
      */
     public boolean isCompleted(String jobId) throws Exception;
+
+    /**
+     * Queries Salesforce to get the BatchInfo of the specified Job
+     * Check whether all the Jobs are completed
+     * @param jobId Job to be checked for its status
+     * @return true - if all batches are completed else false
+     * @throws Exception
+     */
+    public boolean isSuccess(String jobId) throws Exception;
 
     /**
      * List of the Batches for the specified Job
