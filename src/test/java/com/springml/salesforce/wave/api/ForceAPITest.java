@@ -62,7 +62,7 @@ public class ForceAPITest extends BaseAPITest {
         ForceAPI forceAPI = APIFactory.getInstance().forceAPI("xxx",
                 "xxx", "https://login.salesforce.com");
 
-        String soql= "Select PricebookEntry.Product2.Name From OpportunityLineItem";
+        String soql= "Select PricebookEntry.Product2.Name, PricebookEntry.Product2.Family From OpportunityLineItem";
         SOQLResult result = forceAPI.query(soql);
         System.out.println("result :  " + result);
         System.out.println("records :  " + result.getRecords());

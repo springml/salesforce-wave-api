@@ -126,14 +126,6 @@ public class ForceAPIImpl extends AbstractAPIImpl implements ForceAPI {
             } else {
                 throw e;
             }
-        } finally {
-            if (getSfConfig().getPartnerConnection() != null && soqlResult != null && soqlResult.isDone()) {
-                try {
-                    getSfConfig().closeConnection();
-                } catch (Exception e) {
-                    LOG.warn("Error while closing PartnerConnection", e);
-                }
-            }
         }
 
         return soqlResult;
