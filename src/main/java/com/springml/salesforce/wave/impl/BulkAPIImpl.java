@@ -4,7 +4,9 @@ import static com.springml.salesforce.wave.util.WaveAPIConstants.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.sforce.soap.partner.PartnerConnection;
@@ -12,10 +14,12 @@ import com.springml.salesforce.wave.api.BulkAPI;
 import com.springml.salesforce.wave.model.BatchInfo;
 import com.springml.salesforce.wave.model.BatchInfoList;
 import com.springml.salesforce.wave.model.JobInfo;
+import com.springml.salesforce.wave.util.LRUCache;
 import com.springml.salesforce.wave.util.SFConfig;
 
 public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
     private static final Logger LOG = Logger.getLogger(BulkAPIImpl.class);
+    private Map<String, String> jobContentTypeMap = new LRUCache<String, String>(100);
 
     public BulkAPIImpl(SFConfig sfConfig) throws Exception {
         super(sfConfig);
@@ -41,18 +45,26 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
                 getObjectMapper().writeValueAsString(jobInfo), true);
         LOG.debug("Response from Salesforce Server " + response);
 
-        return getObjectMapper().readValue(response.getBytes(), JobInfo.class);
+        JobInfo respJobInfo = getObjectMapper().readValue(response.getBytes(), JobInfo.class);
+        jobContentTypeMap.put(respJobInfo.getId(), getRespectiveCntType(jobInfo));
+
+        return respJobInfo;
     }
 
     public BatchInfo addBatch(String jobId, String csvContent) throws Exception {
         PartnerConnection connection = getSfConfig().getPartnerConnection();
         URI requestURI = getSfConfig().getRequestURI(connection, getBatchPath(jobId));
 
+        String contentType = getContentType(jobId);
         String response = getHttpHelper().post(requestURI, getSfConfig().getSessionId(),
-                csvContent, CONTENT_TYPE_TEXT_CSV, true);
+                csvContent, contentType, true);
         LOG.debug("Response from Salesforce Server " + response);
 
         // Response is in xml though Accept is set to application/json
+        if (CONTENT_TYPE_APPLICATION_JSON.equals(contentType)) {
+            return getObjectMapper().readValue(response.getBytes(), BatchInfo.class);
+        }
+
         return getXmlMapper().readValue(response.getBytes(), BatchInfo.class);
     }
 
@@ -72,8 +84,10 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
         BatchInfoList batchInfoList = getBatchInfoList(jobId);
         List<BatchInfo> batchInfos = batchInfoList.getBatchInfo();
         boolean isCompleted = false;
+        LOG.debug("BatchInfos : " + batchInfos);
         if (batchInfos != null) {
             for (BatchInfo batchInfo : batchInfos) {
+                LOG.debug("Batch state : " + batchInfo.getState());
                 isCompleted = STR_COMPLETED.equals(batchInfo.getState());
                 if (STR_FAILED.equals(batchInfo.getState())) {
                     throw new Exception("Batch '" + batchInfo.getId() + "' failed with error '" + batchInfo.getStateMessage() + "'");
@@ -91,6 +105,10 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
         String response = getHttpHelper().get(requestURI, getSfConfig().getSessionId(), true);
         LOG.debug("Response from Salesforce Server " + response);
 
+        if (CONTENT_TYPE_APPLICATION_JSON.equals(getContentType(jobId))) {
+            return getObjectMapper().readValue(response.getBytes(), BatchInfoList.class);
+        }
+
         return getXmlMapper().readValue(response.getBytes(), BatchInfoList.class);
     }
 
@@ -107,6 +125,28 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
     public boolean isSuccess(String jobId) throws Exception {
         // TODO Auto-generated method stub
         return false;
+    }
+
+    private String getContentType(String jobId) {
+        String contentType = jobContentTypeMap.get(jobId);
+        if (StringUtils.isEmpty(contentType)){
+            contentType = CONTENT_TYPE_TEXT_CSV;
+        }
+
+        return contentType;
+    }
+
+    private String getRespectiveCntType(JobInfo jobInfo) {
+        String contentType = null;
+        if (STR_JSON.equals(jobInfo.getContentType())) {
+            contentType = CONTENT_TYPE_APPLICATION_JSON;
+        } else if (STR_XML.equals(jobInfo.getContentType())) {
+            contentType = CONTENT_TYPE_APPLICATION_XML;
+        } else {
+            contentType = CONTENT_TYPE_TEXT_CSV;
+        }
+
+        return contentType;
     }
 
     private String getBatchPath(String jobId, String batchId) {

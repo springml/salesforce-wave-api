@@ -10,6 +10,8 @@ public class WaveAPIConstants {
     public static final String STR_OFFSET_BTW_SPACE = " offset ";
     public static final String STR_ATTRIBUTES = "attributes";
     public static final String STR_CSV = "CSV";
+    public static final String STR_JSON = "JSON";
+    public static final String STR_XML = "XML";
     public static final String STR_INSERT = "insert";
     public static final String STR_UPDATE = "update";
     public static final String STR_CLOSED = "Closed";
@@ -17,6 +19,7 @@ public class WaveAPIConstants {
     public static final String STR_FAILED = "Failed";
 
     public static final String CONTENT_TYPE_APPLICATION_JSON = "application/json";
+    public static final String CONTENT_TYPE_APPLICATION_XML = "application/xml";
     public static final String CONTENT_TYPE_TEXT_CSV= "text/csv";
 
     public static final String HEADER_ACCEPT = "Accept";

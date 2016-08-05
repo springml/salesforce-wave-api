@@ -86,6 +86,13 @@ public class ForceAPIImpl extends AbstractAPIImpl implements ForceAPI {
         return response;
     }
 
+    @Override
+    public String getSFEndpoint() throws Exception {
+        URI seURI = new URI(getSfConfig().getPartnerConnection().getConfig().getServiceEndpoint());
+        return new URI(seURI.getScheme(),seURI.getUserInfo(), seURI.getHost(), seURI.getPort(),
+                null, null, null).toString();
+    }
+
     private String getInsertPath(SFConfig sfConfig, String object) {
         StringBuilder objPath = new StringBuilder();
         objPath.append(SERVICE_PATH);
@@ -140,4 +147,5 @@ public class ForceAPIImpl extends AbstractAPIImpl implements ForceAPI {
 
         return queryPath.toString();
     }
+
 }

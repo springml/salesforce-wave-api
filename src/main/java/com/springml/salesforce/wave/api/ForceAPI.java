@@ -46,4 +46,5 @@ public interface ForceAPI {
      */
 //    public InsertObjectsResponse insertObjects(String object, List<String> objects) throws Exception;
 
+    public String getSFEndpoint() throws Exception;
 }
