@@ -129,7 +129,11 @@ public class ForceAPIImpl extends AbstractAPIImpl implements ForceAPI {
                 LOG.info("Retry attempt " + attempt);
                 //Retrying incase of Salesforce service timeout
                 attempt++;
-                soqlResult = query(queryURI, attempt);
+                soqlResult = query(queryURI, ++attempt);
+            } else if (e.getMessage().contains("INVALID_SESSION_ID") && attempt < 5) {
+                getSfConfig().closeConnection();
+                LOG.info("Retrying with new connection...");
+                soqlResult = query(queryURI, ++attempt);
             } else {
                 throw e;
             }

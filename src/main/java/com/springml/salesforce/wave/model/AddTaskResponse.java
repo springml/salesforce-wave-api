@@ -7,6 +7,5 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 // In case of error below response is returned from salesforce
 // [{"message":"Related To ID: id value of incorrect type: 006B000002nBrQ","errorCode":"MALFORMED_ID","fields":["WhatId"]}]
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Deprecated
 public class AddTaskResponse extends ForceResponse {
 }
