@@ -7,7 +7,6 @@ import java.net.URI;
 
 import org.apache.log4j.Logger;
 
-import com.sforce.soap.partner.fault.UnexpectedErrorFault;
 import com.springml.salesforce.wave.api.ForceAPI;
 import com.springml.salesforce.wave.model.AddTaskRequest;
 import com.springml.salesforce.wave.model.AddTaskResponse;
@@ -129,14 +128,9 @@ public class ForceAPIImpl extends AbstractAPIImpl implements ForceAPI {
                 LOG.info("Retrying salesforce query");
                 LOG.info("Retry attempt " + attempt);
                 //Retrying incase of Salesforce service timeout
-                attempt++;
                 soqlResult = query(queryURI, ++attempt);
             } else if (e.getMessage().contains("INVALID_SESSION_ID") && attempt < 5) {
-                try {
-                    getSfConfig().closeConnection();
-                } catch (UnexpectedErrorFault uef) {
-                    // ignore it, as we are creating new connection
-                }
+                getSfConfig().closeConnection();
                 LOG.info("Retrying with new connection...");
                 soqlResult = query(queryURI, ++attempt);
             } else {

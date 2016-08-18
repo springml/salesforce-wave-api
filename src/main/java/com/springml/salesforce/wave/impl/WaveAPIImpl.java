@@ -43,6 +43,7 @@ public class WaveAPIImpl extends AbstractAPIImpl implements WaveAPI {
     }
 
     private QueryResult query(String saql, boolean closeConnection) throws Exception {
+        QueryResult result = null;
         SFConfig sfConfig = getSfConfig();
         PartnerConnection connection = sfConfig.getPartnerConnection();
         try {
@@ -55,7 +56,16 @@ public class WaveAPIImpl extends AbstractAPIImpl implements WaveAPI {
             URI queryURI = sfConfig.getRequestURI(connection, waveQueryPath);
             String response = getHttpHelper().post(queryURI, getSfConfig().getSessionId(connection), request);
             LOG.debug("Query Response from server " + response);
-            return getObjectMapper().readValue(response.getBytes(), QueryResult.class);
+            result = getObjectMapper().readValue(response.getBytes(), QueryResult.class);
+        } catch (Exception e) {
+            LOG.warn("Error while executing salesforce query ", e);
+            if (e.getMessage().contains("INVALID_SESSION_ID")) {
+                getSfConfig().closeConnection();
+                LOG.info("Retrying with new connection...");
+                result = query(saql, closeConnection);
+            } else {
+                throw e;
+            }
         } finally {
             if (closeConnection) {
                 try {
@@ -65,6 +75,8 @@ public class WaveAPIImpl extends AbstractAPIImpl implements WaveAPI {
                 }
             }
         }
+
+        return result;
     }
 
     private QueryResult queryWithPagination(String saql, String resultVar, int limit, int offset) throws Exception {
