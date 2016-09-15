@@ -92,10 +92,24 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
                 if (STR_FAILED.equals(batchInfo.getState())) {
                     throw new Exception("Batch '" + batchInfo.getId() + "' failed with error '" + batchInfo.getStateMessage() + "'");
                 }
+
+                LOG.info("Number of records failed : " + batchInfo.getNumberRecordsFailed());
+                if (batchInfo.getNumberRecordsFailed() > 0) {
+                    String result = getResult(jobId, batchInfo.getId());
+                    LOG.error("Failed record details \n " + result);
+                    throw new Exception("Batch '" + batchInfo.getId() +
+                            "' failed. Number of failed records is " + batchInfo.getNumberRecordsFailed());
+                }
             }
         }
 
         return isCompleted;
+    }
+
+    private String getResult(String jobId, String batchId) throws Exception {
+        PartnerConnection connection = getSfConfig().getPartnerConnection();
+        URI requestURI = getSfConfig().getRequestURI(connection, getBatchResultPath(jobId, batchId));
+        return getHttpHelper().get(requestURI, getSfConfig().getSessionId(), true);
     }
 
     public BatchInfoList getBatchInfoList(String jobId) throws Exception {
@@ -155,6 +169,14 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
         batchPath.append('/');
         batchPath.append(batchId);
         return batchPath.toString();
+    }
+
+    private String getBatchResultPath(String jobId, String batchId) {
+        StringBuilder batchResultPath = new StringBuilder();
+        batchResultPath.append(getBatchPath(jobId, batchId));
+        batchResultPath.append(PATH_RESULT);
+
+        return batchResultPath.toString();
     }
 
     private String getBatchPath(String jobId) {

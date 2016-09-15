@@ -42,6 +42,7 @@ public class WaveAPIConstants {
     public static final String PATH_FEED_ELEMENTS = "/feed-elements";
     public static final String PATH_JOB = "/job";
     public static final String PATH_BATCH = "/batch";
+    public static final String PATH_RESULT = "/result";
     public static final String SERVICE_PATH_QUERY = SERVICE_PATH + "v" + API_VERSION + PATH_QUERY;
     public static final String QUERY_PARAM = "q=";
 

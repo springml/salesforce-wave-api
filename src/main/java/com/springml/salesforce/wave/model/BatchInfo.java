@@ -14,11 +14,11 @@ public class BatchInfo implements Serializable {
     private String stateMessage;
     private String createdDate;
     private String systemModstamp;
-    private String numberRecordsProcessed;
-    private String numberRecordsFailed;
-    private String totalProcessingTime;
-    private String apiActiveProcessingTime;
-    private String apexProcessingTime;
+    private long numberRecordsProcessed;
+    private long numberRecordsFailed;
+    private long totalProcessingTime;
+    private long apiActiveProcessingTime;
+    private long apexProcessingTime;
 
     public String getId() {
         return id;
@@ -60,43 +60,43 @@ public class BatchInfo implements Serializable {
         this.systemModstamp = systemModstamp;
     }
 
-    public String getNumberRecordsProcessed() {
+    public long getNumberRecordsProcessed() {
         return numberRecordsProcessed;
     }
 
-    public void setNumberRecordsProcessed(String numberRecordsProcessed) {
+    public void setNumberRecordsProcessed(long numberRecordsProcessed) {
         this.numberRecordsProcessed = numberRecordsProcessed;
     }
 
-    public String getNumberRecordsFailed() {
+    public long getNumberRecordsFailed() {
         return numberRecordsFailed;
     }
 
-    public void setNumberRecordsFailed(String numberRecordsFailed) {
+    public void setNumberRecordsFailed(long numberRecordsFailed) {
         this.numberRecordsFailed = numberRecordsFailed;
     }
 
-    public String getTotalProcessingTime() {
+    public long getTotalProcessingTime() {
         return totalProcessingTime;
     }
 
-    public void setTotalProcessingTime(String totalProcessingTime) {
+    public void setTotalProcessingTime(long totalProcessingTime) {
         this.totalProcessingTime = totalProcessingTime;
     }
 
-    public String getApiActiveProcessingTime() {
+    public long getApiActiveProcessingTime() {
         return apiActiveProcessingTime;
     }
 
-    public void setApiActiveProcessingTime(String apiActiveProcessingTime) {
+    public void setApiActiveProcessingTime(long apiActiveProcessingTime) {
         this.apiActiveProcessingTime = apiActiveProcessingTime;
     }
 
-    public String getApexProcessingTime() {
+    public long getApexProcessingTime() {
         return apexProcessingTime;
     }
 
-    public void setApexProcessingTime(String apexProcessingTime) {
+    public void setApexProcessingTime(long apexProcessingTime) {
         this.apexProcessingTime = apexProcessingTime;
     }
 
