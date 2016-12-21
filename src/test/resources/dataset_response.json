@@ -1,0 +1,96 @@
+{
+  "datasets": [
+  {
+      "createdBy": {
+        "id": "005B0000001JZytIAG",
+        "name": "Owner",
+        "profilePhotoUrl": "https://my--c.gus.content.force.com/profilephoto/005/T"
+      },
+      "createdDate": "2016-01-18T14:11:44.000Z",
+      "currentVersionCreatedBy": {
+        "id": "005B0000001JZrrIAG",
+        "name": "Integration User",
+        "profilePhotoUrl": "https://my--c.gus.content.force.com/profilephoto/005/T"
+      },
+      "currentVersionCreatedDate": "2016-03-01T14:29:24.000Z",
+      "currentVersionId": "0FcB0000000DGKeKAO",
+      "currentVersionLastModifiedBy": {
+        "id": "005B0000001JZrsIAG",
+        "name": "Security User",
+        "profilePhotoUrl": "https://my--c.gus.content.force.com/profilephoto/005/T"
+      },
+      "currentVersionLastModifiedDate": "2016-12-20T23:35:20.000Z",
+      "currentVersionUrl": "/services/data/v38.0/wave/datasets/0FbB00000000KybKAE/versions/0FcB0000000DGKeKAO",
+      "folder": {
+        "id": "00lB0000000hEKXIA2",
+        "label": "App",
+        "name": "App",
+        "url": "/services/data/v38.0/wave/folders/00lB0000000hEKXIA2"
+      },
+      "id": "0FbB00000000KybKAE",
+      "label": "Account",
+      "lastAccessedDate": "2016-12-20T06:06:03.000Z",
+      "lastModifiedBy": {
+        "id": "005B0000001JZrsIAG",
+        "name": "Security User",
+        "profilePhotoUrl": "https://my--c.gus.content.force.com/profilephoto/005/T"
+      },
+      "lastModifiedDate": "2016-12-20T23:35:20.000Z",
+      "name": "Account",
+      "permissions": {
+        "manage": true,
+        "modify": true,
+        "view": true
+      },
+      "type": "dataset",
+      "url": "/services/data/v38.0/wave/datasets/0FbB00000000KybKAE",
+      "versionsUrl": "/services/data/v38.0/wave/datasets/0FbB00000000KybKAE/versions"
+    },
+    {
+      "createdBy": {
+        "id": "005B0000001LERtIAO",
+        "name": "Test",
+        "profilePhotoUrl": "https://my--c.gus.content.force.com/profilephoto/005/T"
+      },
+      "createdDate": "2016-12-15T05:00:17.000Z",
+      "currentVersionCreatedBy": {
+        "id": "005B0000001JZrrIAG",
+        "name": "Integration User",
+        "profilePhotoUrl": "https://my--c.gus.content.force.com/profilephoto/005/T"
+      },
+      "currentVersionCreatedDate": "2016-12-15T05:00:21.000Z",
+      "currentVersionId": "0FcB0000000eMIGKA2",
+      "currentVersionLastModifiedBy": {
+        "id": "005B0000001JZrsIAG",
+        "name": "Security User",
+        "profilePhotoUrl": "https://my--c.gus.content.force.com/profilephoto/005/T"
+      },
+      "currentVersionLastModifiedDate": "2016-12-15T05:12:11.000Z",
+      "currentVersionUrl": "/services/data/v38.0/wave/datasets/0FbB0000000GoQNKA0/versions/0FcB0000000eMIGKA2",
+      "folder": {
+        "id": "005B0000001LERtIAO"
+      },
+      "id": "0FbB0000000GoQNKA0",
+      "label": "test_Account",
+      "lastAccessedDate": "2016-12-15T05:12:02.000Z",
+      "lastModifiedBy": {
+        "id": "005B0000001JZrsIAG",
+        "name": "Security User",
+        "profilePhotoUrl": "https://my--c.gus.content.force.com/profilephoto/005/T"
+      },
+      "lastModifiedDate": "2016-12-15T05:12:11.000Z",
+      "name": "test_Account",
+      "permissions": {
+        "manage": true,
+        "modify": true,
+        "view": true
+      },
+      "type": "dataset",
+      "url": "/services/data/v38.0/wave/datasets/0FbB0000000GoQNKA0",
+      "versionsUrl": "/services/data/v38.0/wave/datasets/0FbB0000000GoQNKA0/versions"
+    }
+  ],
+  "nextPageUrl": null,
+  "totalSize": 2,
+  "url": "/services/data/v38.0/wave/datasets?q=Account&hasCurrentOnly=true"
+}

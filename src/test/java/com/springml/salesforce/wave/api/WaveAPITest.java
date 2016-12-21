@@ -4,10 +4,12 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
+import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -103,6 +105,25 @@ public class WaveAPITest extends BaseAPITest {
         when(httpHelper.post(any(URI.class), any(String.class), any(String.class))).thenReturn(QUERY_MORE_RESPONSE_JSON);
         QueryResult queryMoreResult = waveAPI.queryMore(result);
         assertTrue(queryMoreResult.isDone());
+    }
+
+    @Test
+    public void testGetDatasetId() throws Exception {
+        InputStream responseIS = this.getClass().getClassLoader().getResourceAsStream("dataset_response.json");
+        String response = IOUtils.toString(responseIS, "UTF-8");
+
+        when(httpHelper.get(any(URI.class), any(String.class))).thenReturn(response);
+
+        WaveAPI waveAPI = APIFactory.getInstance().waveAPI("dummyusername",
+                "dummypassword", "https://login.salesforce.com");
+        ((WaveAPIImpl) waveAPI).setHttpHelper(httpHelper);
+        ((WaveAPIImpl) waveAPI).setSfConfig(sfConfig);
+        ((WaveAPIImpl) waveAPI).setObjectMapper(objectMapper);
+
+        String datasetId = waveAPI.getDatasetId("Account");
+        assertNotNull(datasetId);
+        String expectedDatasetId = "0FbB00000000KybKAE/0FcB0000000DGKeKAO";
+        assertEquals("DatasetId does not match", expectedDatasetId, datasetId);
     }
 
 }

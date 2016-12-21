@@ -33,6 +33,7 @@ public class WaveAPIConstants {
     public static final String SERVICE_ASYNC_PATH = "/services/async/";
     public static final String API_VERSION = "35.0";
     public static final String PATH_WAVE_QUERY = "/wave/query";
+    public static final String PATH_WAVE_DATA= "wave/datasets??hasCurrentOnly=true&filterGroup=Supplemental&q=";
     public static final String PATH_SOAP_ENDPOINT = "/services/Soap/u/" + API_VERSION;
     public static final String SERVICE_PATH_WAVE_QUERY = SERVICE_PATH + "v" + API_VERSION + PATH_WAVE_QUERY;
     public static final String PATH_QUERY = "/query";

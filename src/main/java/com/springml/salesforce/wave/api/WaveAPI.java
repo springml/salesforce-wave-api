@@ -33,4 +33,11 @@ public interface WaveAPI {
      */
     public QueryResult queryMore(QueryResult queryResult) throws Exception;
 
+    /**
+     * Returns DatasetId appended with VersionId separated by /
+     * @param datasetName Name of the dataset for which datasetId and versionId to be fetched
+     * @return datasetId appended with versionId separated by /
+     * @throws Exception
+     */
+    public String getDatasetId(String datasetName) throws Exception;
 }
