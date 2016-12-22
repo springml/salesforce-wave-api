@@ -48,8 +48,16 @@ public class WaveAPIImpl extends AbstractAPIImpl implements WaveAPI {
     public String getDatasetId(String datasetName) throws Exception {
         String datasetId = null;
         SFConfig sfConfig = getSfConfig();
-        String datasetsQueryPath = getDatasetsQueryPath(sfConfig, datasetName);
-        String response = getHttpHelper().get(new URI(datasetsQueryPath), getSfConfig().getSessionId());
+        PartnerConnection connection = sfConfig.getPartnerConnection();
+
+        StringBuilder queryParam = new StringBuilder();
+        queryParam.append(QUERY_PARAM);
+        queryParam.append(datasetName);
+
+        String datasetsQueryPath = getDatasetsQueryPath(sfConfig);
+        URI queryURI = sfConfig.getRequestURI(connection, datasetsQueryPath, queryParam.toString());
+
+        String response = getHttpHelper().get(queryURI, getSfConfig().getSessionId());
         DatasetsResponse datasetResponse = getObjectMapper().readValue(response.getBytes(), DatasetsResponse.class);
         List<Dataset> datasets = datasetResponse.getDatasets();
         for (Dataset dataset : datasets) {
@@ -172,13 +180,12 @@ public class WaveAPIImpl extends AbstractAPIImpl implements WaveAPI {
         return waveQueryPath.toString();
     }
 
-    private String getDatasetsQueryPath(SFConfig sfConfig, String datasetName	) {
+    private String getDatasetsQueryPath(SFConfig sfConfig) {
         StringBuilder waveQueryPath = new StringBuilder();
         waveQueryPath.append(SERVICE_PATH);
         waveQueryPath.append("v");
         waveQueryPath.append(sfConfig.getApiVersion());
-        waveQueryPath.append(PATH_WAVE_DATA);
-        waveQueryPath.append(datasetName);
+        waveQueryPath.append(PATH_WAVE_DATASETS);
 
         return waveQueryPath.toString();
     }

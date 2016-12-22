@@ -14,10 +14,12 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.sforce.soap.partner.PartnerConnection;
 import com.springml.salesforce.wave.impl.WaveAPIImpl;
 import com.springml.salesforce.wave.model.QueryResult;
 import com.springml.salesforce.wave.model.Results;
 import com.springml.salesforce.wave.util.HTTPHelper;
+import com.springml.salesforce.wave.util.WaveAPIConstants;
 
 public class WaveAPITest extends BaseAPITest {
     private static final String SAQL = "q = load \"0FbB000000007qmKAA/0FcB00000000LgTKAU\"; q = group q by ('event', 'device_type'); q = foreach q generate 'event' as 'event',  'device_type' as 'device_type', count() as 'count'; q = limit q 2000;";
@@ -109,10 +111,16 @@ public class WaveAPITest extends BaseAPITest {
 
     @Test
     public void testGetDatasetId() throws Exception {
+        String datasetName = "Account";
+        String datasetEndpoint = SERVICE_ENDPOINT + "/services/data/v" + sfConfig.getApiVersion() +
+                WaveAPIConstants.PATH_WAVE_DATASETS + "?q=" + datasetName;
+
         InputStream responseIS = this.getClass().getClassLoader().getResourceAsStream("dataset_response.json");
         String response = IOUtils.toString(responseIS, "UTF-8");
 
-        when(httpHelper.get(any(URI.class), any(String.class))).thenReturn(response);
+        when(sfConfig.getRequestURI(any(PartnerConnection.class), any(String.class))).thenCallRealMethod();
+        when(sfConfig.getRequestURI(any(PartnerConnection.class), any(String.class), any(String.class))).thenCallRealMethod();
+        when(httpHelper.get(new URI(datasetEndpoint), SESSION_ID)).thenReturn(response);
 
         WaveAPI waveAPI = APIFactory.getInstance().waveAPI("dummyusername",
                 "dummypassword", "https://login.salesforce.com");
@@ -120,7 +128,7 @@ public class WaveAPITest extends BaseAPITest {
         ((WaveAPIImpl) waveAPI).setSfConfig(sfConfig);
         ((WaveAPIImpl) waveAPI).setObjectMapper(objectMapper);
 
-        String datasetId = waveAPI.getDatasetId("Account");
+        String datasetId = waveAPI.getDatasetId(datasetName);
         assertNotNull(datasetId);
         String expectedDatasetId = "0FbB00000000KybKAE/0FcB0000000DGKeKAO";
         assertEquals("DatasetId does not match", expectedDatasetId, datasetId);
