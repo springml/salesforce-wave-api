@@ -13,6 +13,7 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 
 import com.springml.salesforce.wave.impl.ForceAPIImpl;
 import com.springml.salesforce.wave.model.AddTaskRequest;
@@ -22,6 +23,7 @@ import com.springml.salesforce.wave.model.SOQLResult;
 import com.springml.salesforce.wave.util.HTTPHelper;
 
 public class ForceAPITest extends BaseAPITest {
+    private static final String SOQL2 = "select name, id,Model__c, Buyer_Name__c , buy_price__C from Opportunity where buy_price__C > 1000";
     private static final String SOQL = "SELECT AccountId, Id, ProposalID__c FROM Opportunity where ProposalID__c != null";
     private static final String QUERY_MORE_SOQL = "SELECT Id, OwnerId, Name, Player_Id__c, Phone__c FROM player__c";
     private static final String RESPONSE_JSON = "{\"totalSize\":4,\"done\":true,\"records\":[{\"attributes\":{\"type\":\"Opportunity\",\"url\":\"/services/data/v34.0/sobjects/Opportunity/006B0000002ndnuIAA\"},\"AccountId\":\"001B0000003oYAfIAM\",\"Id\":\"006B0000002ndnuIAA\",\"ProposalID__c\":\"103\"},{\"attributes\":{\"type\":\"Opportunity\",\"url\":\"/services/data/v34.0/sobjects/Opportunity/006B0000002ndnpIAA\"},\"AccountId\":\"001B0000003oYAfIAM\",\"Id\":\"006B0000002ndnpIAA\",\"ProposalID__c\":\"102\"}]}";
@@ -35,24 +37,24 @@ public class ForceAPITest extends BaseAPITest {
         when(sfConfig.getRequestURI(conn, SERVICE_PATH_QUERY, queryParam.toString())).thenCallRealMethod();
 
         httpHelper = mock(HTTPHelper.class);
-        when(httpHelper.get(any(URI.class), any(String.class), any(Integer.class))).thenReturn(RESPONSE_JSON);
+        when(httpHelper.get((URI) ArgumentMatchers.isNull(), (String) ArgumentMatchers.isNull(), any(Integer.class))).thenReturn(RESPONSE_JSON);
     }
 
     @Test
-    @Ignore("This can be only executed with actual salesforce username and password")
+   // @Ignore("This can be only executed with actual salesforce username and password")
     public void testQueryWithoutMock() throws Exception {
-        ForceAPI forceAPI = APIFactory.getInstance().forceAPI("xxx@xxx.com",
-                "***", "https://login.salesforce.com");
+        ForceAPI forceAPI = APIFactory.getInstance().forceAPI("james@ooequipment.com",
+                "oolong200molbX310CHFjJHR8djRKpiB1", "https://login.salesforce.com");
 
-        SOQLResult result = forceAPI.query(SOQL);
+        SOQLResult result = forceAPI.query(SOQL2);
         System.out.println("result :  " + result);
         System.out.println("records :  " + result.getRecords());
         System.out.println("records size :  " + result.getRecords().size());
         List<Map<String, String>> filterRecords = result.filterRecords();
         System.out.println("filterRecords : " + filterRecords);
-        System.out.println(result.getRecords().get(0).get("ProposalID__c"));
-        assertEquals(4, result.getRecords().size());
-        assertEquals("103", result.getRecords().get(0).get("ProposalID__c"));
+        System.out.println(result.getRecords().get(0).get("buy_price__c"));
+        assertEquals(84, result.getRecords().size());
+        assertEquals(6, result.getRecords().get(0).size());
         assertTrue(result.isDone());
     }
 
@@ -178,7 +180,7 @@ public class ForceAPITest extends BaseAPITest {
     public void testAddTask() throws Exception {
         ForceAPI forceAPI = APIFactory.getInstance().forceAPI("dummyusername",
                 "dummypassword", "https://login.salesforce.com");
-        when(httpHelper.post(any(URI.class), anyString(), anyString())).
+        when(httpHelper.post((URI) ArgumentMatchers.isNull(), anyString(), anyString())).
                 thenReturn("{\"id\":\"00TB0000003LgMzMAK\",\"success\":true,\"errors\":[]}");
         ((ForceAPIImpl) forceAPI).setHttpHelper(httpHelper);
         ((ForceAPIImpl) forceAPI).setSfConfig(sfConfig);
@@ -199,7 +201,7 @@ public class ForceAPITest extends BaseAPITest {
     public void testAddTaskNegativeCase() throws Exception {
         ForceAPI forceAPI = APIFactory.getInstance().forceAPI("dummyusername",
                 "dummypassword", "https://login.salesforce.com");
-        when(httpHelper.post(any(URI.class), anyString(), anyString())).
+        when(httpHelper.post((URI) ArgumentMatchers.isNull(), anyString(), anyString())).
                 thenReturn("[{\"message\":\"Related To ID: id value of incorrect type: invalid\",\"errorCode\":\"MALFORMED_ID\",\"fields\":[\"WhatId\"]}]");
         ((ForceAPIImpl) forceAPI).setHttpHelper(httpHelper);
         ((ForceAPIImpl) forceAPI).setSfConfig(sfConfig);
@@ -220,7 +222,7 @@ public class ForceAPITest extends BaseAPITest {
     public void testInsertObject() throws Exception {
         ForceAPI forceAPI = APIFactory.getInstance().forceAPI("dummyusername",
                 "dummypassword", "https://login.salesforce.com");
-        when(httpHelper.post(any(URI.class), anyString(), anyString())).
+        when(httpHelper.post((URI) ArgumentMatchers.isNull(), anyString(), anyString())).
                 thenReturn("{\"id\":\"00TB0000003LgMzMAK\",\"success\":true,\"errors\":[]}");
         ((ForceAPIImpl) forceAPI).setHttpHelper(httpHelper);
         ((ForceAPIImpl) forceAPI).setSfConfig(sfConfig);
