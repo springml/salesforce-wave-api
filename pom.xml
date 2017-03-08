@@ -2,19 +2,13 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.springml</groupId>
+    <groupId>io.lingk</groupId>
     <artifactId>salesforce-wave-api</artifactId>
     <version>1.0.7</version>
     <packaging>jar</packaging>
 
     <name>salesforce-wave-api</name>
     <description>Java client for Salesforce Wave API</description>
-    <developers>
-        <developer>
-            <id>samuel-pt</id>
-            <name>Samuel Alexander</name>
-        </developer>
-    </developers>
 
     <url>https://github.com/springml/salesforce-wave-api</url>
     <licenses>
@@ -51,12 +45,12 @@
         <dependency>
             <groupId>com.force.api</groupId>
             <artifactId>force-partner-api</artifactId>
-            <version>34.0.0</version>
+            <version>39.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.force.api</groupId>
             <artifactId>force-wsc</artifactId>
-            <version>34.2.2</version>
+            <version>39.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>

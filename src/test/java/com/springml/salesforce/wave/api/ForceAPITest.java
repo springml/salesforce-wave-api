@@ -42,7 +42,7 @@ public class ForceAPITest extends BaseAPITest {
     @Ignore("This can be only executed with actual salesforce username and password")
     public void testQueryWithoutMock() throws Exception {
         ForceAPI forceAPI = APIFactory.getInstance().forceAPI("xxx@xxx.com",
-                "***", "https://login.salesforce.com");
+                "***", false, null, "https://login.salesforce.com");
 
         SOQLResult result = forceAPI.query(SOQL);
         System.out.println("result :  " + result);
@@ -60,7 +60,7 @@ public class ForceAPITest extends BaseAPITest {
     @Ignore("This can be only executed with actual salesforce username and password")
     public void testCustomQuery() throws Exception {
         ForceAPI forceAPI = APIFactory.getInstance().forceAPI("xxx",
-                "xxx", "https://login.salesforce.com");
+                "xxx", false, null, "https://login.salesforce.com");
 
         String soql= "Select PricebookEntry.Product2.Name, PricebookEntry.Product2.Family From OpportunityLineItem";
         SOQLResult result = forceAPI.query(soql);
@@ -83,7 +83,7 @@ public class ForceAPITest extends BaseAPITest {
     @Ignore("This can be only executed with actual salesforce username and password")
     public void testRelationshipQueryWithoutMock() throws Exception {
       ForceAPI forceAPI = APIFactory.getInstance().forceAPI("xxx@xxx.com",
-              "***", "https://login.salesforce.com");
+              "***", false, null, "https://login.salesforce.com");
 
       String sql = "SELECT id, Account.type, name, stagename, amount, type, nextstep, leadsource, isclosed, iswon, forecastcategory FROM Opportunity";
       SOQLResult result = forceAPI.query(sql);
@@ -102,7 +102,7 @@ public class ForceAPITest extends BaseAPITest {
     @Ignore("This can be only executed with actual salesforce username and password")
     public void testInsertWithoutMock() throws Exception {
         ForceAPI forceAPI = APIFactory.getInstance().forceAPI("xxx",
-                "xxx", "https://login.salesforce.com");
+                "xxx", false, null, "https://login.salesforce.com");
 
         String inputJson = "{\"Name\":\"Awesome News\",\"URL__c\":\"http://testURL\",\"published_date__c\":\"2016-07-04T07:37:00.000\"}";
 
@@ -115,7 +115,7 @@ public class ForceAPITest extends BaseAPITest {
     @Test
     public void testQuery() throws Exception {
         ForceAPI forceAPI = APIFactory.getInstance().forceAPI("dummyusername",
-                "dummypassword", "https://login.salesforce.com");
+                "dummypassword", false, null, "https://login.salesforce.com");
         ((ForceAPIImpl) forceAPI).setHttpHelper(httpHelper);
         ((ForceAPIImpl) forceAPI).setSfConfig(sfConfig);
         ((ForceAPIImpl) forceAPI).setObjectMapper(objectMapper);
@@ -135,7 +135,7 @@ public class ForceAPITest extends BaseAPITest {
     @Ignore("This can be only executed with actual salesforce username and password")
     public void testQueryMoreWithoutMock() throws Exception {
         ForceAPI forceAPI = APIFactory.getInstance().forceAPI("xxx@xxx.com",
-                "***", "https://login.salesforce.com");
+                "***", false, null, "https://login.salesforce.com");
 
         System.out.println("Executing QueryMoreWithoutLock.......");
         SOQLResult result = forceAPI.query(QUERY_MORE_SOQL);
@@ -151,7 +151,7 @@ public class ForceAPITest extends BaseAPITest {
     @Test
     public void testQueryMore() throws Exception {
         ForceAPI forceAPI = APIFactory.getInstance().forceAPI("dummyusername",
-                "dummypassword", "https://login.salesforce.com");
+                "dummypassword", false, null, "https://login.salesforce.com");
         ((ForceAPIImpl) forceAPI).setHttpHelper(httpHelper);
         ((ForceAPIImpl) forceAPI).setSfConfig(sfConfig);
         ((ForceAPIImpl) forceAPI).setObjectMapper(objectMapper);
@@ -177,7 +177,7 @@ public class ForceAPITest extends BaseAPITest {
     @Test
     public void testAddTask() throws Exception {
         ForceAPI forceAPI = APIFactory.getInstance().forceAPI("dummyusername",
-                "dummypassword", "https://login.salesforce.com");
+                "dummypassword", false, null, "https://login.salesforce.com");
         when(httpHelper.post(any(URI.class), anyString(), anyString())).
                 thenReturn("{\"id\":\"00TB0000003LgMzMAK\",\"success\":true,\"errors\":[]}");
         ((ForceAPIImpl) forceAPI).setHttpHelper(httpHelper);
@@ -198,7 +198,7 @@ public class ForceAPITest extends BaseAPITest {
     @Test
     public void testAddTaskNegativeCase() throws Exception {
         ForceAPI forceAPI = APIFactory.getInstance().forceAPI("dummyusername",
-                "dummypassword", "https://login.salesforce.com");
+                "dummypassword", false, null, "https://login.salesforce.com");
         when(httpHelper.post(any(URI.class), anyString(), anyString())).
                 thenReturn("[{\"message\":\"Related To ID: id value of incorrect type: invalid\",\"errorCode\":\"MALFORMED_ID\",\"fields\":[\"WhatId\"]}]");
         ((ForceAPIImpl) forceAPI).setHttpHelper(httpHelper);
@@ -219,7 +219,7 @@ public class ForceAPITest extends BaseAPITest {
     @Test
     public void testInsertObject() throws Exception {
         ForceAPI forceAPI = APIFactory.getInstance().forceAPI("dummyusername",
-                "dummypassword", "https://login.salesforce.com");
+                "dummypassword", false, null, "https://login.salesforce.com");
         when(httpHelper.post(any(URI.class), anyString(), anyString())).
                 thenReturn("{\"id\":\"00TB0000003LgMzMAK\",\"success\":true,\"errors\":[]}");
         ((ForceAPIImpl) forceAPI).setHttpHelper(httpHelper);

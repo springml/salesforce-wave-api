@@ -92,7 +92,7 @@ public class BulkAPITest extends BaseAPITest {
         when(httpHelper.get(batchURI, SESSION_ID, true)).thenReturn(GET_BATCH_RESPONSE);
 
         bulkAPI = APIFactory.getInstance().bulkAPI("dummyusername",
-                "dummypassword", "https://login.salesforce.com", API_VERSION);
+                "dummypassword",false, null, "https://login.salesforce.com", API_VERSION);
         ((BulkAPIImpl) bulkAPI).setHttpHelper(httpHelper);
         ((BulkAPIImpl) bulkAPI).setSfConfig(sfConfig);
         ((BulkAPIImpl) bulkAPI).setObjectMapper(objectMapper);
@@ -101,7 +101,7 @@ public class BulkAPITest extends BaseAPITest {
     @Test
     @Ignore("This can be only executed with actual salesforce username and password")
     public void testBulkAPI() throws Exception {
-        BulkAPI bulkAPI = APIFactory.getInstance().bulkAPI("xxx@xxx.com", "xxxx",
+        BulkAPI bulkAPI = APIFactory.getInstance().bulkAPI("xxx@xxx.com", "xxxx", false, null,
                 "https://login.salesforce.com", API_VERSION);
         JobInfo jobInfo = bulkAPI.createJob(STR_CONTACT);
         assertEquals(STR_CONTACT, jobInfo.getObject());
