@@ -4,7 +4,7 @@
 
     <groupId>com.springml</groupId>
     <artifactId>salesforce-wave-api</artifactId>
-    <version>1.0.7</version>
+    <version>1.0.8</version>
     <packaging>jar</packaging>
 
     <name>salesforce-wave-api</name>
