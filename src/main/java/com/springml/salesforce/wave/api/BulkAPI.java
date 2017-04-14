@@ -1,5 +1,7 @@
 package com.springml.salesforce.wave.api;
 
+import java.util.List;
+
 import com.springml.salesforce.wave.model.BatchInfo;
 import com.springml.salesforce.wave.model.BatchInfoList;
 import com.springml.salesforce.wave.model.JobInfo;
@@ -15,8 +17,37 @@ public interface BulkAPI {
      * @param The Salesforce object to be updated
      * @return @JobInfo
      * @throws Exception
+     * @deprecated Use createUpdateJob or createQueryJob instead
      */
     public JobInfo createJob(String object) throws Exception;
+    
+    /**
+     * Create Update Job
+     * @param object
+     * @return
+     * @throws Exception
+     */
+    public JobInfo createUpdateJob(String object) throws Exception;
+    
+    /**
+     * 
+     * @param object
+     * @return
+     * @throws Exception
+     */
+    public JobInfo createQueryJob(String object) throws Exception;
+    
+    
+    /**
+     * 
+     * @param object
+     * @param pkChunkingKey
+     * @param pkChunkingValue
+     * @return
+     * @throws Exception
+     */
+    public JobInfo createQueryJob(String object, String pkChunkingKey, String pkChunkingValue) throws Exception;
+
 
     /**
      * Create a new Bulk Job
@@ -45,6 +76,15 @@ public interface BulkAPI {
      * @throws Exception
      */
     public BatchInfo addBatch(String jobId, String csvContent) throws Exception;
+    
+    /**
+     * 
+     * @param jobId
+     * @param checkBatchesFirst
+     * @return
+     * @throws Exception
+     */
+	public JobInfo closeJob(String jobId, Boolean checkBatchesFirst) throws Exception;
 
     /**
      * Close the specified Salesforce Bulk Job
@@ -88,4 +128,17 @@ public interface BulkAPI {
      * @throws Exception
      */
     public BatchInfo getBatchInfo(String jobId, String batchId) throws Exception;
+    
+    /**
+     * Get list of active jobs
+     * @return
+     */
+    public List<String> getActiveJobIds();
+
+    /**
+     * Get list of recently completed jobs
+     * @return
+     */
+    public List<String> getCompletedJobIds();
+
 }

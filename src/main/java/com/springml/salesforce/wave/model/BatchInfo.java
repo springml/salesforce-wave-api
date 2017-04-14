@@ -3,6 +3,7 @@ package com.springml.salesforce.wave.model;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.springml.salesforce.wave.util.WaveAPIConstants;
 
 @JsonIgnoreProperties
 public class BatchInfo implements Serializable {
@@ -38,6 +39,10 @@ public class BatchInfo implements Serializable {
 
     public String getState() {
         return state;
+    }
+    
+    public Boolean isQueued() {
+    	return state.equals(WaveAPIConstants.STR_QUEUED);
     }
 
     public void setState(String state) {
