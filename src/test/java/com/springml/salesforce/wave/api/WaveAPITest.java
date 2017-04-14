@@ -1,7 +1,8 @@
 package com.springml.salesforce.wave.api;
 
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
+import static org.mockito.ArgumentMatchers.*;
+
 import static org.mockito.Mockito.*;
 
 import java.io.InputStream;
@@ -13,6 +14,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 
 import com.sforce.soap.partner.PartnerConnection;
 import com.springml.salesforce.wave.impl.WaveAPIImpl;
@@ -32,7 +34,7 @@ public class WaveAPITest extends BaseAPITest {
     public void setup() throws Exception {
         super.setup();
         httpHelper = mock(HTTPHelper.class);
-        when(httpHelper.post(any(URI.class), any(String.class), any(String.class)))
+        when(httpHelper.post((URI) ArgumentMatchers.isNull(), (String) ArgumentMatchers.isNull(), any(String.class)))
                 .thenReturn(RESPONSE_JSON);
     }
 
@@ -87,7 +89,7 @@ public class WaveAPITest extends BaseAPITest {
 
     @Test
     public void testQueryMore() throws Exception {
-        when(httpHelper.post(any(URI.class), any(String.class), any(String.class))).thenReturn(PAGINATED_QUERY_RESPONSE_JSON);
+        when(httpHelper.post((URI) ArgumentMatchers.isNull(), (String) ArgumentMatchers.isNull(), any(String.class))).thenReturn(PAGINATED_QUERY_RESPONSE_JSON);
         WaveAPI waveAPI = APIFactory.getInstance().waveAPI("dummyusername",
                 "dummypassword", "https://login.salesforce.com");
         ((WaveAPIImpl) waveAPI).setHttpHelper(httpHelper);
@@ -101,12 +103,12 @@ public class WaveAPITest extends BaseAPITest {
         List<Map<String,String>> records = results.getRecords();
         assertNotNull(records);
         assertTrue(!records.isEmpty());
-        assertEquals(2, records.size());
+        assertEquals(2, records.size());        
         assertTrue(!result.isDone());
 
-        when(httpHelper.post(any(URI.class), any(String.class), any(String.class))).thenReturn(QUERY_MORE_RESPONSE_JSON);
+        when(httpHelper.post((URI) ArgumentMatchers.isNull(), (String) ArgumentMatchers.isNull(), any(String.class))).thenReturn(QUERY_MORE_RESPONSE_JSON);
         QueryResult queryMoreResult = waveAPI.queryMore(result);
-        assertTrue(queryMoreResult.isDone());
+        assertTrue(queryMoreResult.isDone());  
     }
 
     @Test

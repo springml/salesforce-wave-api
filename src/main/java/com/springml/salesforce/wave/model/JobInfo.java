@@ -2,6 +2,7 @@ package com.springml.salesforce.wave.model;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties
@@ -29,7 +30,16 @@ public class JobInfo implements Serializable {
     private String systemModstamp;
     private String totalProcessingTime;
     private String id;
+    @JsonIgnore transient private String header;
 
+    public JobInfo(String contentType, String object, String operation, String header) {
+        this.contentType = contentType;
+        this.object = object;
+        this.operation = operation;
+        this.header = header;
+    }
+
+    
     public JobInfo(String contentType, String object, String operation) {
         this.contentType = contentType;
         this.object = object;
@@ -93,6 +103,14 @@ public class JobInfo implements Serializable {
 
     public String getCreatedDate() {
         return createdDate;
+    }
+    
+    public String getHeader() {
+        return header;
+    }
+    
+    public void setHeader(String key, String value) {
+        header = key + ":" + value;
     }
 
     public void setCreatedDate(String createdDate) {

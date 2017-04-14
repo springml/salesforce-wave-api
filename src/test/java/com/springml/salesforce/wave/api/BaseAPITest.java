@@ -2,6 +2,8 @@ package com.springml.salesforce.wave.api;
 
 import static org.mockito.Mockito.*;
 
+import org.apache.log4j.BasicConfigurator;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sforce.soap.partner.PartnerConnection;
@@ -21,6 +23,7 @@ public abstract class BaseAPITest {
     protected PartnerConnectionExt conn = null;
 
     public void setup() throws Exception {
+    	BasicConfigurator.configure();
         conn = PartnerConnectionExt.getInstance();
 
         sfConfig = mock(SFConfig.class);

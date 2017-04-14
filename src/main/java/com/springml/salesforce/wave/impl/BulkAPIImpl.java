@@ -1,10 +1,28 @@
 package com.springml.salesforce.wave.impl;
 
-import static com.springml.salesforce.wave.util.WaveAPIConstants.*;
+import static com.springml.salesforce.wave.util.WaveAPIConstants.CONTENT_TYPE_APPLICATION_JSON;
+import static com.springml.salesforce.wave.util.WaveAPIConstants.CONTENT_TYPE_APPLICATION_XML;
+import static com.springml.salesforce.wave.util.WaveAPIConstants.CONTENT_TYPE_TEXT_CSV;
+import static com.springml.salesforce.wave.util.WaveAPIConstants.PATH_BATCH;
+import static com.springml.salesforce.wave.util.WaveAPIConstants.PATH_JOB;
+import static com.springml.salesforce.wave.util.WaveAPIConstants.PATH_RESULT;
+import static com.springml.salesforce.wave.util.WaveAPIConstants.SERVICE_ASYNC_PATH;
+import static com.springml.salesforce.wave.util.WaveAPIConstants.STR_CLOSED;
+import static com.springml.salesforce.wave.util.WaveAPIConstants.STR_COMPLETED;
+import static com.springml.salesforce.wave.util.WaveAPIConstants.STR_CSV;
+import static com.springml.salesforce.wave.util.WaveAPIConstants.STR_FAILED;
+import static com.springml.salesforce.wave.util.WaveAPIConstants.STR_JSON;
+import static com.springml.salesforce.wave.util.WaveAPIConstants.STR_PARALLEL;
+import static com.springml.salesforce.wave.util.WaveAPIConstants.STR_QUERY;
+import static com.springml.salesforce.wave.util.WaveAPIConstants.STR_UPDATE;
+import static com.springml.salesforce.wave.util.WaveAPIConstants.STR_XML;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -19,30 +37,54 @@ import com.springml.salesforce.wave.util.SFConfig;
 
 public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
     private static final Logger LOG = Logger.getLogger(BulkAPIImpl.class);
-    private Map<String, String> jobContentTypeMap = new LRUCache<String, String>(100);
+    private Map<String, String> jobContentTypeMap = new LRUCache<String, String>(200);
+    private Map<String, BatchInfo> batchedJobMap  = new LRUCache<String, BatchInfo>(200);
+    private Map<String, BatchInfo> finishedJobMap = new LRUCache<String, BatchInfo>(100);
+        
 
     public BulkAPIImpl(SFConfig sfConfig) throws Exception {
         super(sfConfig);
     }
-
+    
     public JobInfo createJob(String object) throws Exception {
+        return createUpdateJob(object);
+    }
+
+    public JobInfo createUpdateJob(String object) throws Exception {
         JobInfo jobInfo = new JobInfo(STR_CSV, object, STR_UPDATE);
 
         return createJob(jobInfo);
     }
 
-    public JobInfo createJob(String object, String operation, String contentType) throws Exception {
-        JobInfo jobInfo = new JobInfo(contentType, object, operation);
+    public JobInfo createQueryJob(String object) throws Exception {
+    	return createQueryJob(object, "Sforce-Enable-PKChunking", "true");
+    }
+
+    public JobInfo createQueryJob(String object, String pkChunkingKey, String pkChunkingValue) throws Exception {
+        JobInfo jobInfo = new JobInfo(STR_CSV, object, STR_QUERY);
+        jobInfo.setConcurrencyMode(STR_PARALLEL);
+        if (pkChunkingKey!=null && pkChunkingValue!=null)
+        jobInfo.setHeader(pkChunkingKey, pkChunkingValue);
 
         return createJob(jobInfo);
+    }
+
+    public JobInfo createJob(String object, String operation, String contentType, String concurrencyMode, String header) throws Exception {
+        JobInfo jobInfo = new JobInfo(contentType, object, operation,header);
+
+        return createJob(jobInfo);
+    }
+    
+    public JobInfo createJob(String object, String operation, String contentType) throws Exception {
+        return createJob(object,operation,contentType,null,null);
     }
 
     public JobInfo createJob(JobInfo jobInfo) throws Exception {
         PartnerConnection connection = getSfConfig().getPartnerConnection();
         URI requestURI = getSfConfig().getRequestURI(connection, getJobPath());
 
-        String response = getHttpHelper().post(requestURI, getSfConfig().getSessionId(),
-                getObjectMapper().writeValueAsString(jobInfo), true);
+        String response = getHttpHelper().post(requestURI,getSfConfig().getSessionId(),
+                getObjectMapper().writeValueAsString(jobInfo), true, jobInfo.getHeader());
         LOG.debug("Response from Salesforce Server " + response);
 
         JobInfo respJobInfo = getObjectMapper().readValue(response.getBytes(), JobInfo.class);
@@ -65,10 +107,18 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
             return getObjectMapper().readValue(response.getBytes(), BatchInfo.class);
         }
 
-        return getXmlMapper().readValue(response.getBytes(), BatchInfo.class);
+        BatchInfo result = getXmlMapper().readValue(response.getBytes(), BatchInfo.class);
+        if (result.isQueued()) {
+        	batchedJobMap.put(result.getJobId(), result);
+        }
+        return result;
     }
 
-    public JobInfo closeJob(String jobId) throws Exception {
+	public JobInfo closeJob(String jobId, Boolean checkBatchesFirst) throws Exception {
+		if (checkBatchesFirst && !this.isCompleted(jobId)) {
+			LOG.error("Job " + jobId + " has unprocessed batches. Can not be closed");
+			return null;
+		}
         PartnerConnection connection = getSfConfig().getPartnerConnection();
         URI requestURI = getSfConfig().getRequestURI(connection, getJobPath(jobId));
 
@@ -78,6 +128,10 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
         LOG.debug("Response from Salesforce Server " + response);
 
         return getObjectMapper().readValue(response.getBytes(), JobInfo.class);
+    }
+
+	public JobInfo closeJob(String jobId) throws Exception {
+		return closeJob(jobId,false);
     }
 
     public boolean isCompleted(String jobId) throws Exception {
@@ -201,6 +255,31 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
         jobPath.append(getSfConfig().getApiVersion());
         jobPath.append(PATH_JOB);
         return jobPath.toString();
+    }
+    
+    /**
+     * Get list of active jobs
+     * @return
+     */
+    public List<String> getActiveJobIds() {
+    	Set<String> jobs = new HashSet<String> (batchedJobMap.size());
+    	for (BatchInfo batch:batchedJobMap.values()) {
+    		jobs.add(batch.getJobId());
+    	}
+    	return new ArrayList<String>(jobs);
+    }
+
+    /**
+     * Get list of recently completed jobs
+     * @return
+     */
+    public List<String> getCompletedJobIds() {
+    	Set<String> jobs = new HashSet<String> (finishedJobMap.size());
+    	for (BatchInfo batch:finishedJobMap.values()) {
+    		jobs.add(batch.getJobId());
+    	}
+    	return new ArrayList<String>(jobs);
+    	
     }
 
 }

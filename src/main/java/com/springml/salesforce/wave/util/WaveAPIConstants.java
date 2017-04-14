@@ -1,7 +1,9 @@
 package com.springml.salesforce.wave.util;
 
 public class WaveAPIConstants {
-    public static final String STR_QUERY = "query";
+    public static final String STR_QUEUED = "Queued";
+    public static final String STR_PARALLEL = "Parallel";
+	public static final String STR_QUERY = "query";
     public static final String STR_UTF_8 = "UTF-8";
     public static final String STR_SPACE = " ";
     public static final String STR_EQUALS = "=";

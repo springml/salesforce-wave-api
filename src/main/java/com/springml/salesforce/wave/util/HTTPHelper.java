@@ -24,15 +24,33 @@ import org.apache.log4j.Logger;
 public class HTTPHelper {
     private static final Logger LOG = Logger.getLogger(HTTPHelper.class);
 
+//    public String post(URI uri, String sessionId, String request) throws Exception {
+//        return post(uri, sessionId, request, CONTENT_TYPE_APPLICATION_JSON, false,null);
+//    }
+//
+//    public String post(URI uri, String sessionId, String request, boolean isBulk) throws Exception {
+//        return post(uri, sessionId, request, CONTENT_TYPE_APPLICATION_JSON, isBulk,null);
+//    }
+    
     public String post(URI uri, String sessionId, String request) throws Exception {
-        return post(uri, sessionId, request, CONTENT_TYPE_APPLICATION_JSON, false);
+        return post(uri, sessionId, request, CONTENT_TYPE_APPLICATION_JSON, false, null);
     }
 
+
     public String post(URI uri, String sessionId, String request, boolean isBulk) throws Exception {
-        return post(uri, sessionId, request, CONTENT_TYPE_APPLICATION_JSON, isBulk);
+        return post(uri, sessionId, request, CONTENT_TYPE_APPLICATION_JSON, isBulk,null);
+    }
+
+    
+    public String post(URI uri, String sessionId, String request, boolean isBulk, String header) throws Exception {
+        return post(uri, sessionId, request, CONTENT_TYPE_APPLICATION_JSON, isBulk,header);
     }
 
     public String post(URI uri, String sessionId, String request, String contentType, boolean isBulk) throws Exception {
+        return post(uri, sessionId, request, contentType, isBulk,null);
+    }
+
+    public String post(URI uri, String sessionId, String request, String contentType, boolean isBulk, String header) throws Exception {
         LOG.info("Executing POST request on " + uri);
         LOG.debug("Sending request " + request);
         LOG.debug("Content-Type " + contentType);
@@ -50,6 +68,12 @@ public class HTTPHelper {
         httpPost.setConfig(getRequestConfig());
         if (isBulk) {
             httpPost.addHeader(HEADER_X_SFDC_SESSION, sessionId);
+            if (header!=null) {
+            	String[] params = header.split(":");
+            	String headerKey = params[0];
+            	String headerValue = params[1];
+                httpPost.addHeader(headerKey,headerValue);
+            }
         } else {
             httpPost.addHeader(HEADER_AUTH, HEADER_OAUTH + sessionId);
         }
