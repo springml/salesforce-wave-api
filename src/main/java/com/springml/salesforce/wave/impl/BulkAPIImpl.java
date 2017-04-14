@@ -137,7 +137,7 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
     public boolean isCompleted(String jobId) throws Exception {
         BatchInfoList batchInfoList = getBatchInfoList(jobId);
         List<BatchInfo> batchInfos = batchInfoList.getBatchInfo();
-        boolean isCompleted = false;
+        boolean isCompleted = true;
         LOG.debug("BatchInfos : " + batchInfos);
         if (batchInfos != null) {
             for (BatchInfo batchInfo : batchInfos) {
