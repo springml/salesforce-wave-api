@@ -38,6 +38,8 @@ public interface BulkAPI {
     public JobInfo createQueryJob(String object) throws Exception;
     
     
+    public JobInfo createQueryJob(String object, Boolean pkChunking) throws Exception;
+    
     /**
      * 
      * @param object
@@ -66,6 +68,7 @@ public interface BulkAPI {
      * @throws Exception
      */
     public JobInfo createJob(JobInfo jobInfo) throws Exception;
+    
 
     /**
      * Add a batch to an existing Job
