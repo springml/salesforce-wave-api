@@ -90,15 +90,17 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
                 LOG.debug("Batch state : " + batchInfo.getState());
                 isCompleted = STR_COMPLETED.equals(batchInfo.getState());
                 if (STR_FAILED.equals(batchInfo.getState())) {
-                    throw new Exception("Batch '" + batchInfo.getId() + "' failed with error '" + batchInfo.getStateMessage() + "'");
+                    return true;
+                    //throw new Exception("Batch '" + batchInfo.getId() + "' failed with error '" + batchInfo.getStateMessage() + "'");
                 }
 
                 LOG.info("Number of records failed : " + batchInfo.getNumberRecordsFailed());
                 if (batchInfo.getNumberRecordsFailed() > 0) {
                     String result = getResult(jobId, batchInfo.getId());
                     LOG.error("Failed record details \n " + result);
-                    throw new Exception("Batch '" + batchInfo.getId() +
-                            "' failed. Number of failed records is " + batchInfo.getNumberRecordsFailed());
+                    return true;
+//                    throw new Exception("Batch '" + batchInfo.getId() +
+//                            "' failed. Number of failed records is " + batchInfo.getNumberRecordsFailed());
                 }
             }
         }
