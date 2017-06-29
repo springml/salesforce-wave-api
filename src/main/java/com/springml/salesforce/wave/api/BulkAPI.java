@@ -1,3 +1,21 @@
+/*
+ * Copyright 2015 - 2017, salesforce-wave-api, oolong, springml
+ * Contributors  :
+ *    Kagan Turgut, oolong
+ * 	  Samual Alexander, springml  
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.springml.salesforce.wave.api;
 
 import java.io.InputStream;
@@ -40,12 +58,18 @@ public interface BulkAPI {
      */
     public JobInfo createQueryJob(String object) throws Exception;
     
-    
+    /**
+     * Create bulk query job with PK chunking
+     * @param object
+     * @param pkChunking
+     * @return
+     * @throws Exception
+     */
     public JobInfo createQueryJob(String object, Boolean pkChunking) throws Exception;
     
     
     /**
-     * 
+     * Create bulk query job with PK chunking. if QueryAll is set, it will bring deleted Salesforce records as well.
      * @param object     : name of the object in salesforce
      * @param pkChunking : whether the result will be returned in batches
      * @param queryAll   : whether to bring deleted records from salesforce. subject to Salesforce garbage bin limitations
@@ -53,8 +77,10 @@ public interface BulkAPI {
      * @throws Exception
      */
     public JobInfo createQueryJob(String object, Boolean pkChunking, Boolean queryAll) throws Exception;
+    
     /**
-     * 
+     * Create bulk query job with PK chunking. if QueryAll is set, it will bring deleted Salesforce records as well.
+     * Use this method if you want to specify additional pkChunking parameters such as chunkSize.
      * @param object
      * @param pkChunkingKey
      * @param pkChunkingValue : you can optionally pass chunksize, but better to go with the default.
@@ -95,7 +121,7 @@ public interface BulkAPI {
     public BatchInfo addBatch(String jobId, String csvContent) throws Exception;
     
     /**
-     * 
+     * Close the job
      * @param jobId
      * @param checkBatchesFirst
      * @return
@@ -158,8 +184,20 @@ public interface BulkAPI {
      */
     public List<String> getCompletedJobIds();
     
+    /**
+     * Return batchResults for this batch. This is in CSV format, and by default includes the header rows
+     * @param batch
+     * @return
+     * @throws Exception
+     */
     public BatchResult queryBatch(BatchInfo batch) throws Exception;
     
+    /**
+     * Return batchresults as a stream. CSV format, includes the header rows by default.
+     * @param batch
+     * @return
+     * @throws Exception
+     */
     public InputStream queryBatchStream(BatchInfo batch) throws Exception;
 
 
