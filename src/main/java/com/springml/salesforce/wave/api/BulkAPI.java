@@ -1,10 +1,13 @@
 package com.springml.salesforce.wave.api;
 
+import java.io.InputStream;
 import java.util.List;
 
 import com.springml.salesforce.wave.model.BatchInfo;
 import com.springml.salesforce.wave.model.BatchInfoList;
+import com.springml.salesforce.wave.model.BatchResult;
 import com.springml.salesforce.wave.model.JobInfo;
+import com.springml.salesforce.wave.model.SOQLResult;
 
 /**
  * Java client for Salesforce Bulk API
@@ -40,15 +43,26 @@ public interface BulkAPI {
     
     public JobInfo createQueryJob(String object, Boolean pkChunking) throws Exception;
     
+    
+    /**
+     * 
+     * @param object     : name of the object in salesforce
+     * @param pkChunking : whether the result will be returned in batches
+     * @param queryAll   : whether to bring deleted records from salesforce. subject to Salesforce garbage bin limitations
+     * @return
+     * @throws Exception
+     */
+    public JobInfo createQueryJob(String object, Boolean pkChunking, Boolean queryAll) throws Exception;
     /**
      * 
      * @param object
      * @param pkChunkingKey
-     * @param pkChunkingValue
+     * @param pkChunkingValue : you can optionally pass chunksize, but better to go with the default.
+     * @param queryAll : if true, it will bring deleted records as well.
      * @return
      * @throws Exception
      */
-    public JobInfo createQueryJob(String object, String pkChunkingKey, String pkChunkingValue) throws Exception;
+    public JobInfo createQueryJob(String object, String pkChunkingKey, String pkChunkingValue, Boolean queryAll) throws Exception;
 
 
     /**
@@ -143,5 +157,10 @@ public interface BulkAPI {
      * @return
      */
     public List<String> getCompletedJobIds();
+    
+    public BatchResult queryBatch(BatchInfo batch) throws Exception;
+    
+    public InputStream queryBatchStream(BatchInfo batch) throws Exception;
+
 
 }

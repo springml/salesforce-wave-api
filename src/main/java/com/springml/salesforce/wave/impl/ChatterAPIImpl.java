@@ -28,7 +28,6 @@ public class ChatterAPIImpl extends AbstractAPIImpl implements ChatterAPI {
                 sfConfig.getPartnerConnection(), feddElementsPath);
 
         String requestStr = getObjectMapper().writeValueAsString(request);
-        System.out.println("requestStr : " + requestStr);
         LOG.debug("Post Message Request " + requestStr);
         String responseStr = getHttpHelper().post(taskURI, getSfConfig().getSessionId(), requestStr);
 

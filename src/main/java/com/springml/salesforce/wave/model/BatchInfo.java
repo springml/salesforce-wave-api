@@ -20,7 +20,20 @@ public class BatchInfo implements Serializable {
     private long totalProcessingTime;
     private long apiActiveProcessingTime;
     private long apexProcessingTime;
-
+    
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("BatchInfo (job:");
+        sb.append(jobId);
+        sb.append(" batch:");
+        sb.append(id);
+        sb.append(" state:");
+        sb.append(state);
+        sb.append(")");
+    	return sb.toString();
+    }
+    
     public String getId() {
         return id;
     }
@@ -112,5 +125,28 @@ public class BatchInfo implements Serializable {
     public void setStateMessage(String stateMessage) {
         this.stateMessage = stateMessage;
     }
+    
+    public boolean hasDataToLoad() {
+    	return !("NotProcessed".equals(this.state) || "Failed".equals(this.state));
+    }
+    
+    public boolean isFailed() {
+    	return "Failed".equals(this.state);
+    }
+    
+    public boolean isCompleted() {
+    	return "Completed".equals(this.state);
+    }
+    
+    public boolean needsTime() {
+    	return isQueued() || isInProgress();
+    }
+    
+    public boolean isInProgress() {
+    	return "InProgress".equals(this.state);
+    }
+    
+
+
 
 }

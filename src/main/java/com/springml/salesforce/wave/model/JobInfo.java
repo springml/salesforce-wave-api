@@ -31,6 +31,8 @@ public class JobInfo implements Serializable {
     private String totalProcessingTime;
     private String id;
     @JsonIgnore transient private String header;
+    
+    
 
     public JobInfo(String contentType, String object, String operation, String header) {
         this.contentType = contentType;
@@ -228,5 +230,19 @@ public class JobInfo implements Serializable {
     public void setId(String id) {
         this.id = id;
     }
-
+    
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("JobInfo (job:");
+        sb.append(id);
+        sb.append(" object:");
+        sb.append(object);
+        sb.append(" operation:");
+        sb.append(operation);
+        sb.append(" state:");
+        sb.append(state);
+        sb.append(")");
+    	return sb.toString();
+    }
 }
