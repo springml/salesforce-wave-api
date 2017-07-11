@@ -208,12 +208,11 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
 	}
 
 	public BatchInfoList getBatchInfoList(String jobId) throws Exception {
-	//	Thread.sleep(30000); // thirty seconds
 		PartnerConnection connection = getSfConfig().getPartnerConnection();
 		URI requestURI = getSfConfig().getRequestURI(connection, getBatchPath(jobId));
 
 		String response = getHttpHelper().get(requestURI, getSfConfig().getSessionId(), true);
-		LOG.debug("Response from Salesforce Server " + response);
+		// LOG.debug("Response from Salesforce Server " + response);
 
 		if (CONTENT_TYPE_APPLICATION_JSON.equals(getContentType(jobId))) {
 			return getObjectMapper().readValue(response.getBytes(), BatchInfoList.class);
@@ -227,7 +226,7 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
 		URI requestURI = getSfConfig().getRequestURI(connection, getBatchPath(jobId, batchId));
 
 		String response = getHttpHelper().get(requestURI, getSfConfig().getSessionId(), true);
-		LOG.debug("Response from Salesforce Server " + response);
+		// LOG.debug("Response from Salesforce Server " + response);
 
 		String contentType = getContentType(jobId);
 

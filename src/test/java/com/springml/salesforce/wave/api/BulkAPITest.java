@@ -119,7 +119,7 @@ public class BulkAPITest extends BaseAPITest {
 	@Test
 	@Ignore("This can be only executed with actual salesforce username and password")
 	public void testBulkQuery() throws Exception {
-		BulkAPI bulkAPI = APIFactory.getInstance().bulkAPI("sfuser", "sfpassword",
+		BulkAPI bulkAPI = APIFactory.getInstance().bulkAPI("james@ooequipment.com", "oolong200molbX310CHFjJHR8djRKpiB1",
 				"https://login.salesforce.com", API_VERSION);
 		JobInfo jobInfo = bulkAPI.createQueryJob(STR_CONTACT);
 		assertEquals(STR_CONTACT, jobInfo.getObject());
@@ -165,7 +165,7 @@ public class BulkAPITest extends BaseAPITest {
 	@Test
 	 @Ignore("This can be only executed with actual salesforce username and password")
 	public void testBulkLoad() throws Exception {
-		BulkAPI bulkAPI = APIFactory.getInstance().bulkAPI("sfuser", "sfpassword",
+		BulkAPI bulkAPI = APIFactory.getInstance().bulkAPI("james@ooequipment.com", "oolong200molbX310CHFjJHR8djRKpiB1",
 				"https://login.salesforce.com", API_VERSION);
 		JobInfo jobInfo = bulkAPI.createUpdateJob(STR_CONTACT);
 		assertEquals(STR_CONTACT, jobInfo.getObject());
