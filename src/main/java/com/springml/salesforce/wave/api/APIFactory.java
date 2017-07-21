@@ -50,9 +50,15 @@ public class APIFactory {
         sfConfig.setMaxRetry(maxRetry);
         return new ForceAPIImpl(sfConfig);
     }
-
+    
     public BulkAPI bulkAPI(String username, String password, boolean useBearerToken, String bearerToken, String loginURL, String apiVersion) throws Exception {
         SFConfig sfConfig = new SFConfig(username, password, useBearerToken, bearerToken, loginURL, apiVersion, null);
+        return new BulkAPIImpl(sfConfig);
+    }
+
+    public BulkAPI bulkAPI(String username, String password, boolean useBearerToken, String bearerToken, String loginURL, String apiVersion, String concurrencyMode) throws Exception {
+        SFConfig sfConfig = new SFConfig(username, password, useBearerToken, bearerToken, loginURL, apiVersion, null);
+        sfConfig.setConcurrencyMode(concurrencyMode);
         return new BulkAPIImpl(sfConfig);
     }
 

@@ -24,6 +24,7 @@ public class SFConfig {
     private Integer batchSize;
     private PartnerConnection partnerConnection;
     private Integer maxRetry = 5;
+    private String concurrencyMode = "Serial";
 
     public SFConfig(String username, String password, String loginURL,
             String apiVersion) {
@@ -107,6 +108,14 @@ public class SFConfig {
 
     public void setMaxRetry(Integer maxRetry) {
         this.maxRetry = maxRetry;
+    }
+    
+    public String getConcurrencyMode() {
+        return concurrencyMode;
+    }
+
+    public void setConcurrencyMode(String concurrencyMode) {
+        this.concurrencyMode = concurrencyMode;
     }
 
     public PartnerConnection getPartnerConnection() throws Exception {

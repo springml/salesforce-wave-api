@@ -27,20 +27,22 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
 
     public JobInfo createJob(String object) throws Exception {
         JobInfo jobInfo = new JobInfo(STR_CSV, object, STR_UPDATE);
+        jobInfo.setConcurrencyMode(getSfConfig().getConcurrencyMode());
 
         return createJob(jobInfo);
     }
 
     public JobInfo createJob(String object, String operation, String contentType) throws Exception {
         JobInfo jobInfo = new JobInfo(contentType, object, operation);
+        jobInfo.setConcurrencyMode(getSfConfig().getConcurrencyMode());
 
         return createJob(jobInfo);
     }
 
     public JobInfo createJob(JobInfo jobInfo) throws Exception {
         PartnerConnection connection = getSfConfig().getPartnerConnection();
+        jobInfo.setConcurrencyMode(getSfConfig().getConcurrencyMode());
         URI requestURI = getSfConfig().getRequestURI(connection, getJobPath());
-
         String response = getHttpHelper().post(requestURI, getSfConfig().getSessionId(),
                 getObjectMapper().writeValueAsString(jobInfo), true);
         LOG.debug("Response from Salesforce Server " + response);
