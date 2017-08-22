@@ -17,24 +17,33 @@ public class SFConfig {
 
     private String username;
     private String password;
+    private boolean useBearerAuth;
+    private String bearerToken;
     private String loginURL;
     private String apiVersion;
     private Integer batchSize;
     private PartnerConnection partnerConnection;
     private Integer maxRetry = 5;
+    private String concurrencyMode = "Serial";
 
     public SFConfig(String username, String password, String loginURL,
             String apiVersion) {
-        this(username, password, loginURL, apiVersion, null);
+        this(username, password, false, null, loginURL, apiVersion, null);
     }
 
-    public SFConfig(String username, String password, String loginURL,
+    public SFConfig(String username, String password, boolean useBearerToken, String bearerToken, String loginURL,
             String apiVersion, Integer batchSize) {
         this.username = username;
         this.password = password;
         this.loginURL = loginURL;
         this.apiVersion = apiVersion;
         this.batchSize = batchSize;
+        this.useBearerAuth = useBearerToken;
+        this.bearerToken = bearerToken;
+    }
+    
+    public SFConfig(String bearerToken, String loginURL, String apiVersion) {
+        this(null, null, true, bearerToken, loginURL, apiVersion, null);
     }
 
     public String getUsername() {
@@ -51,6 +60,22 @@ public class SFConfig {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isUseBearerAuth() {
+        return useBearerAuth;
+    }
+
+    public void setUseBearerAuth(boolean useBearerAuth) {
+        this.useBearerAuth = useBearerAuth;
+    }
+
+    public String getBearerToken() {
+        return bearerToken;
+    }
+
+    public void setBearerToken(String bearerToken) {
+        this.bearerToken = bearerToken;
     }
 
     public String getLoginURL() {
@@ -84,6 +109,14 @@ public class SFConfig {
     public void setMaxRetry(Integer maxRetry) {
         this.maxRetry = maxRetry;
     }
+    
+    public String getConcurrencyMode() {
+        return concurrencyMode;
+    }
+
+    public void setConcurrencyMode(String concurrencyMode) {
+        this.concurrencyMode = concurrencyMode;
+    }
 
     public PartnerConnection getPartnerConnection() throws Exception {
         if (partnerConnection == null) {
@@ -96,8 +129,12 @@ public class SFConfig {
     private PartnerConnection createPartnerConnection() throws Exception {
         ConnectorConfig config = new ConnectorConfig();
         LOG.debug("Connecting SF Partner Connection using " + username);
-        config.setUsername(username);
-        config.setPassword(password);
+        if (useBearerAuth) {
+            config.setSessionId(bearerToken);
+        } else {
+            config.setUsername(username);
+            config.setPassword(password);
+        }
         String authEndpoint = getAuthEndpoint(loginURL);
         LOG.info("loginURL : " + authEndpoint);
         config.setAuthEndpoint(authEndpoint);

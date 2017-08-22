@@ -2,6 +2,7 @@ package com.springml.salesforce.wave.api;
 
 import com.springml.salesforce.wave.model.BatchInfo;
 import com.springml.salesforce.wave.model.BatchInfoList;
+import com.springml.salesforce.wave.model.BulkRowCount;
 import com.springml.salesforce.wave.model.JobInfo;
 
 /**
@@ -88,4 +89,12 @@ public interface BulkAPI {
      * @throws Exception
      */
     public BatchInfo getBatchInfo(String jobId, String batchId) throws Exception;
+    
+    /**
+     * Summarizes success and failure row counts for a job that has been completed.
+     * @param jobId
+     * @return
+     * @throws Exception
+     */
+    BulkRowCount getRowCount(String jobId) throws Exception;
 }

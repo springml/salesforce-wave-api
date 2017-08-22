@@ -13,13 +13,13 @@ public class APIFactoryTest {
 
     @Test
     public void forceAPITest() throws Exception {
-        ForceAPI forceAPI = APIFactory.getInstance().forceAPI("username", "password", "http://login.salesforce.com");
+        ForceAPI forceAPI = APIFactory.getInstance().forceAPI("username", "password", false, null, "http://login.salesforce.com");
         assertNotNull(forceAPI);
     }
 
     @Test
     public void bulkAPITest() throws Exception {
-        BulkAPI bulkAPI = APIFactory.getInstance().bulkAPI("username", "password", "http://login.salesforce.com", "36.0");
+        BulkAPI bulkAPI = APIFactory.getInstance().bulkAPI("username", "password", false, null, "http://login.salesforce.com", "36.0");
         assertNotNull(bulkAPI);
     }
 }

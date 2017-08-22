@@ -13,6 +13,7 @@ import com.sforce.soap.partner.PartnerConnection;
 import com.springml.salesforce.wave.api.BulkAPI;
 import com.springml.salesforce.wave.model.BatchInfo;
 import com.springml.salesforce.wave.model.BatchInfoList;
+import com.springml.salesforce.wave.model.BulkRowCount;
 import com.springml.salesforce.wave.model.JobInfo;
 import com.springml.salesforce.wave.util.LRUCache;
 import com.springml.salesforce.wave.util.SFConfig;
@@ -27,20 +28,22 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
 
     public JobInfo createJob(String object) throws Exception {
         JobInfo jobInfo = new JobInfo(STR_CSV, object, STR_UPDATE);
+        jobInfo.setConcurrencyMode(getSfConfig().getConcurrencyMode());
 
         return createJob(jobInfo);
     }
 
     public JobInfo createJob(String object, String operation, String contentType) throws Exception {
         JobInfo jobInfo = new JobInfo(contentType, object, operation);
+        jobInfo.setConcurrencyMode(getSfConfig().getConcurrencyMode());
 
         return createJob(jobInfo);
     }
 
     public JobInfo createJob(JobInfo jobInfo) throws Exception {
         PartnerConnection connection = getSfConfig().getPartnerConnection();
+        jobInfo.setConcurrencyMode(getSfConfig().getConcurrencyMode());
         URI requestURI = getSfConfig().getRequestURI(connection, getJobPath());
-
         String response = getHttpHelper().post(requestURI, getSfConfig().getSessionId(),
                 getObjectMapper().writeValueAsString(jobInfo), true);
         LOG.debug("Response from Salesforce Server " + response);
@@ -87,30 +90,34 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
         LOG.debug("BatchInfos : " + batchInfos);
         if (batchInfos != null) {
             for (BatchInfo batchInfo : batchInfos) {
-                LOG.debug("Batch state : " + batchInfo.getState());
-                isCompleted = STR_COMPLETED.equals(batchInfo.getState());
+                isCompleted = STR_COMPLETED.equals(batchInfo.getState()) || STR_FAILED.equals(batchInfo.getState());
                 if (STR_FAILED.equals(batchInfo.getState())) {
-                    throw new Exception("Batch '" + batchInfo.getId() + "' failed with error '" + batchInfo.getStateMessage() + "'");
+                    LOG.info("Failed batch state, bailing out.");
+                    return true;
+                    //throw new Exception("Batch '" + batchInfo.getId() + "' failed with error '" + batchInfo.getStateMessage() + "'");
+                }
+                if (!isCompleted) {
+                    return false;
                 }
 
-                LOG.info("Number of records failed : " + batchInfo.getNumberRecordsFailed());
-                if (batchInfo.getNumberRecordsFailed() > 0) {
-                    String result = getResult(jobId, batchInfo.getId());
-                    LOG.error("Failed record details \n " + result);
-                    throw new Exception("Batch '" + batchInfo.getId() +
-                            "' failed. Number of failed records is " + batchInfo.getNumberRecordsFailed());
-                }
+//                if (batchInfo.getNumberRecordsFailed() > 0) {
+//                    String result = getResult(jobId, batchInfo.getId());
+//                    LOG.error("Failed record details \n " + result);
+//                    return true;
+//                    throw new Exception("Batch '" + batchInfo.getId() +
+//                            "' failed. Number of failed records is " + batchInfo.getNumberRecordsFailed());
+//                }
             }
         }
 
         return isCompleted;
     }
 
-    private String getResult(String jobId, String batchId) throws Exception {
-        PartnerConnection connection = getSfConfig().getPartnerConnection();
-        URI requestURI = getSfConfig().getRequestURI(connection, getBatchResultPath(jobId, batchId));
-        return getHttpHelper().get(requestURI, getSfConfig().getSessionId(), true);
-    }
+//    private String getResult(String jobId, String batchId) throws Exception {
+//        PartnerConnection connection = getSfConfig().getPartnerConnection();
+//        URI requestURI = getSfConfig().getRequestURI(connection, getBatchResultPath(jobId, batchId));
+//        return getHttpHelper().get(requestURI, getSfConfig().getSessionId(), true);
+//    }
 
     public BatchInfoList getBatchInfoList(String jobId) throws Exception {
         PartnerConnection connection = getSfConfig().getPartnerConnection();
@@ -124,6 +131,17 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
         }
 
         return getXmlMapper().readValue(response.getBytes(), BatchInfoList.class);
+    }
+    
+    public BulkRowCount getRowCount(String jobId) throws Exception {
+        BatchInfoList bil = getBatchInfoList(jobId);
+        int success = 0;
+        int fail = 0;
+        for (BatchInfo bi : bil.getBatchInfo()) {
+            success += (bi.getNumberRecordsProcessed() - bi.getNumberRecordsFailed());
+            fail += bi.getNumberRecordsFailed();
+        }
+        return new BulkRowCount(success, fail);
     }
 
     public BatchInfo getBatchInfo(String jobId, String batchId) throws Exception {
@@ -171,13 +189,13 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
         return batchPath.toString();
     }
 
-    private String getBatchResultPath(String jobId, String batchId) {
-        StringBuilder batchResultPath = new StringBuilder();
-        batchResultPath.append(getBatchPath(jobId, batchId));
-        batchResultPath.append(PATH_RESULT);
-
-        return batchResultPath.toString();
-    }
+//    private String getBatchResultPath(String jobId, String batchId) {
+//        StringBuilder batchResultPath = new StringBuilder();
+//        batchResultPath.append(getBatchPath(jobId, batchId));
+//        batchResultPath.append(PATH_RESULT);
+//
+//        return batchResultPath.toString();
+//    }
 
     private String getBatchPath(String jobId) {
         StringBuilder batchPath = new StringBuilder();
