@@ -96,6 +96,9 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
                     return true;
                     //throw new Exception("Batch '" + batchInfo.getId() + "' failed with error '" + batchInfo.getStateMessage() + "'");
                 }
+                if (!isCompleted) {
+                    return false;
+                }
 
 //                if (batchInfo.getNumberRecordsFailed() > 0) {
 //                    String result = getResult(jobId, batchInfo.getId());
