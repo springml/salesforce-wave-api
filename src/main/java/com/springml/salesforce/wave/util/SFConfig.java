@@ -17,7 +17,9 @@ public class SFConfig {
 
     private String username;
     private String password;
-    private String loginURL;
+    private boolean useAuthToken;
+    private String authToken;
+    private String salesforceURL;
     private String apiVersion;
     private Integer batchSize;
     private PartnerConnection partnerConnection;
@@ -28,11 +30,27 @@ public class SFConfig {
         this(username, password, loginURL, apiVersion, null);
     }
 
-    public SFConfig(String username, String password, String loginURL,
+    public SFConfig(String username, String password, String salesforceURL,
             String apiVersion, Integer batchSize) {
+        this.useAuthToken = false;
         this.username = username;
         this.password = password;
-        this.loginURL = loginURL;
+        this.salesforceURL = salesforceURL;
+        this.apiVersion = apiVersion;
+        this.batchSize = batchSize;
+    }
+
+
+    public SFConfig(boolean useAuthToken, String authToken, String loginURL,
+                    String apiVersion) {
+        this(useAuthToken, authToken, loginURL, apiVersion, null);
+    }
+
+    public SFConfig(boolean useAuthToken, String authToken, String salesforceURL,
+                    String apiVersion, Integer batchSize) {
+        this.useAuthToken = true;
+        this.authToken = authToken;
+        this.salesforceURL = salesforceURL;
         this.apiVersion = apiVersion;
         this.batchSize = batchSize;
     }
@@ -42,6 +60,7 @@ public class SFConfig {
     }
 
     public void setUsername(String username) {
+        this.useAuthToken = false;
         this.username = username;
     }
 
@@ -53,12 +72,19 @@ public class SFConfig {
         this.password = password;
     }
 
-    public String getLoginURL() {
-        return loginURL;
+    public String getAuthToken() { return authToken; }
+
+    public void setAuthToken(String authToken) {
+        this.useAuthToken = true;
+        this.authToken = authToken;
     }
 
-    public void setLoginURL(String loginURL) {
-        this.loginURL = loginURL;
+    public String getSalesforceURL() {
+        return salesforceURL;
+    }
+
+    public void setSalesforceURL(String salesforceURL) {
+        this.salesforceURL = salesforceURL;
     }
 
     public String getApiVersion() {
@@ -95,13 +121,22 @@ public class SFConfig {
 
     private PartnerConnection createPartnerConnection() throws Exception {
         ConnectorConfig config = new ConnectorConfig();
-        LOG.debug("Connecting SF Partner Connection using " + username);
-        config.setUsername(username);
-        config.setPassword(password);
-        String authEndpoint = getAuthEndpoint(loginURL);
-        LOG.info("loginURL : " + authEndpoint);
-        config.setAuthEndpoint(authEndpoint);
-        config.setServiceEndpoint(authEndpoint);
+        if (!useAuthToken) {
+            LOG.debug("Connecting SF Partner Connection using " + username);
+            config.setUsername(username);
+            config.setPassword(password);
+            String authEndpoint = getEndpoint(salesforceURL);
+            LOG.info("loginURL : " + authEndpoint);
+            config.setAuthEndpoint(authEndpoint);
+            config.setServiceEndpoint(authEndpoint);
+
+        } else {
+            LOG.debug("Connecting SF Partner Connection using authToken");
+            String serviceEndpoint = getEndpoint(salesforceURL);
+            config.setManualLogin(true);
+            config.setSessionId(authToken);
+            config.setServiceEndpoint(serviceEndpoint);
+        }
 
         try {
             return Connector.newConnection(config);
@@ -130,11 +165,10 @@ public class SFConfig {
                 path, query, null);
     }
 
-    private String getAuthEndpoint(String loginURL) throws Exception {
+    private String getEndpoint(String loginURL) throws Exception {
         URI loginURI = new URI(loginURL);
-
         return new URI(loginURI.getScheme(), loginURI.getUserInfo(), loginURI.getHost(),
-                loginURI.getPort(), PATH_SOAP_ENDPOINT, null, null).toString();
+                loginURI.getPort(), PATH_SOAP_ENDPOINT_PRE + apiVersion, null, null).toString();
     }
 
     public void closeConnection() {
