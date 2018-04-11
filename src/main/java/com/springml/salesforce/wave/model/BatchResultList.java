@@ -9,6 +9,8 @@ import java.util.List;
 
 @JsonIgnoreProperties
 public class BatchResultList implements Serializable {
+    private static final long serialVersionUID = 2388430108404791178L;
+
     @JacksonXmlElementWrapper(useWrapping=false)
     @JsonProperty("result")
     private List<String> batchResultIds;
