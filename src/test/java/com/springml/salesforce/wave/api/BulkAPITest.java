@@ -24,11 +24,15 @@ public class BulkAPITest extends BaseAPITest {
     private static final String STR_CONTACT = "Contact";
     private static final String STR_JOB_ID = "750B0000000WlhtIAC";
     private static final String STR_BATCH_ID = "751B0000000scSHIAY";
+    private static final String STR_RESULT_ID1 = "752x00000004CJE";
+    private static final String STR_RESULT_ID2 = "752x00000004CJF";
 
     private static final String BASE_JOB_URL = "https://gs0.salesforce.com/services/async/36.0/job";
     private static final String JOB_URL = "https://gs0.salesforce.com/services/async/36.0/job/" + STR_JOB_ID;
     private static final String BASE_BATCH_URL = "https://gs0.salesforce.com/services/async/36.0/job/" + STR_JOB_ID + "/batch";
     private static final String BATCH_URL = "https://gs0.salesforce.com/services/async/36.0/job/" + STR_JOB_ID + "/batch/" + STR_BATCH_ID;
+    private static final String BASE_BATCH_RESULT_URL = "https://gs0.salesforce.com/services/async/36.0/job/" + STR_JOB_ID + "/batch/" + STR_BATCH_ID + "/result";
+    private static final String BATCH_RESULT_URL = "https://gs0.salesforce.com/services/async/36.0/job/" + STR_JOB_ID + "/batch/" + STR_BATCH_ID + "/result/" + STR_RESULT_ID1;
 
     private static final String ADD_BATCH_REQUEST = "Id,Description\n003B00000067Rnx,123456\n003B00000067Rnw,7890";
 
@@ -37,7 +41,10 @@ public class BulkAPITest extends BaseAPITest {
     private static final String CLOSE_JOB_RESPONSE = "{\"apexProcessingTime\":0,\"apiActiveProcessingTime\":29,\"apiVersion\":36.0,\"assignmentRuleId\":null,\"concurrencyMode\":\"Parallel\",\"contentType\":\"CSV\",\"createdById\":\"005B0000001LERtIAO\",\"createdDate\":\"2016-03-15T06:25:24.000+0000\",\"externalIdFieldName\":null,\"fastPathEnabled\":false,\"id\":\"750B0000000WlhtIAC\",\"numberBatchesCompleted\":1,\"numberBatchesFailed\":0,\"numberBatchesInProgress\":0,\"numberBatchesQueued\":0,\"numberBatchesTotal\":1,\"numberRecordsFailed\":0,\"numberRecordsProcessed\":2,\"numberRetries\":0,\"object\":\"Contact\",\"operation\":\"update\",\"state\":\"Closed\",\"systemModstamp\":\"2016-03-15T06:25:24.000+0000\",\"totalProcessingTime\":93}";
     private static final String GET_BATCHLIST_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><batchInfoList xmlns=\"http://www.force.com/2009/06/asyncapi/dataload\"><batchInfo><id>751B0000000scSHIAY</id><jobId>750B0000000WlhtIAC</jobId><state>Completed</state><createdDate>2016-03-15T06:25:25.000Z</createdDate><systemModstamp>2016-03-15T06:25:26.000Z</systemModstamp><numberRecordsProcessed>2</numberRecordsProcessed><numberRecordsFailed>0</numberRecordsFailed><totalProcessingTime>93</totalProcessingTime><apiActiveProcessingTime>29</apiActiveProcessingTime><apexProcessingTime>0</apexProcessingTime></batchInfo></batchInfoList>";
     private static final String GET_BATCH_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><batchInfo><id>751B0000000scSHIAY</id><jobId>750B0000000WlhtIAC</jobId><state>Completed</state><createdDate>2016-03-15T06:25:25.000Z</createdDate><systemModstamp>2016-03-15T06:25:26.000Z</systemModstamp><numberRecordsProcessed>2</numberRecordsProcessed><numberRecordsFailed>0</numberRecordsFailed><totalProcessingTime>93</totalProcessingTime><apiActiveProcessingTime>29</apiActiveProcessingTime><apexProcessingTime>0</apexProcessingTime></batchInfo>";
-
+    private static final String GET_BATCH_RESULT_ID_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><result-list xmlns=\"http://www.force.com/2009/06/asyncapi/dataload\"><result>752x00000004CJE</result><result>752x00000004CJF</result></result-list>";
+    private static final String GET_BATCH_RESULT = "\"Id\",\"Name\"\n" +
+        "\"001x000xxx4TU4JAAW\",\"name161268--1296595660659\"\n" +
+        "\"001x000xxx4TU4KAAW\",\"name161269--1296595660659\"\n";
 
     private String getBatchPath(String jobId, String batchId) {
         StringBuilder batchPath = new StringBuilder();
@@ -54,6 +61,24 @@ public class BulkAPITest extends BaseAPITest {
 
         return batchPath.toString();
     }
+
+    private String getBatchResultPath(String jobId, String batchId) {
+        StringBuilder batchResultPath = new StringBuilder();
+        batchResultPath.append(getBatchPath(jobId, batchId));
+        batchResultPath.append(PATH_RESULT);
+
+        return batchResultPath.toString();
+    }
+
+    private String getBatchResultPath(String jobId, String batchId, String resultId) {
+        StringBuilder batchResultPath = new StringBuilder();
+        batchResultPath.append(getBatchResultPath(jobId, batchId));
+        batchResultPath.append('/');
+        batchResultPath.append(resultId);
+
+        return batchResultPath.toString();
+    }
+
 
     private String getJobPath(String jobId) {
         StringBuilder jobPath = new StringBuilder();
@@ -79,17 +104,23 @@ public class BulkAPITest extends BaseAPITest {
         URI jobURI = new URI(JOB_URL);
         URI baseBatchURI = new URI(BASE_BATCH_URL);
         URI batchURI = new URI(BATCH_URL);
+        URI baseBatchResultURI = new URI(BASE_BATCH_RESULT_URL);
+        URI batchResultURI = new URI(BATCH_RESULT_URL);
 
         when(sfConfig.getRequestURI(conn, getJobPath())).thenReturn(baseJobURI);
         when(sfConfig.getRequestURI(conn, getBatchPath(STR_JOB_ID))).thenReturn(baseBatchURI);
         when(sfConfig.getRequestURI(conn, getJobPath(STR_JOB_ID))).thenReturn(jobURI);
         when(sfConfig.getRequestURI(conn, getBatchPath(STR_JOB_ID, STR_BATCH_ID))).thenReturn(batchURI);
+        when(sfConfig.getRequestURI(conn, getBatchResultPath(STR_JOB_ID, STR_BATCH_ID))).thenReturn(baseBatchResultURI);
+        when(sfConfig.getRequestURI(conn, getBatchResultPath(STR_JOB_ID, STR_BATCH_ID, STR_RESULT_ID1))).thenReturn(batchResultURI);
 
         httpHelper = mock(HTTPHelper.class);
         when(httpHelper.post(baseBatchURI, SESSION_ID, ADD_BATCH_REQUEST,
                 WaveAPIConstants.CONTENT_TYPE_TEXT_CSV, true)).thenReturn(ADD_BATCH_RESPONSE);
         when(httpHelper.get(baseBatchURI, SESSION_ID, true)).thenReturn(GET_BATCHLIST_RESPONSE);
         when(httpHelper.get(batchURI, SESSION_ID, true)).thenReturn(GET_BATCH_RESPONSE);
+        when(httpHelper.get(baseBatchResultURI, SESSION_ID, true)).thenReturn(GET_BATCH_RESULT_ID_RESPONSE);
+        when(httpHelper.get(batchResultURI, SESSION_ID, true)).thenReturn(GET_BATCH_RESULT);
 
         bulkAPI = APIFactory.getInstance().bulkAPI("dummyusername",
                 "dummypassword", "https://login.salesforce.com", API_VERSION);
@@ -177,4 +208,17 @@ public class BulkAPITest extends BaseAPITest {
         assertEquals(STR_JOB_ID, batchInfo.getJobId());
     }
 
+    @Test
+    public void testGetBatchResultIds() throws Exception {
+        List<String> batchResultIds = bulkAPI.getBatchResultIds(STR_JOB_ID, STR_BATCH_ID);
+        assertNotNull(batchResultIds);
+        assertEquals(batchResultIds.get(0), STR_RESULT_ID1);
+        assertEquals(batchResultIds.get(1), STR_RESULT_ID2);
+    }
+
+    @Test
+    public void testGetBatchResult() throws Exception {
+        String batchResult = bulkAPI.getBatchResult(STR_JOB_ID, STR_BATCH_ID, STR_RESULT_ID1);
+        assertEquals(batchResult, GET_BATCH_RESULT);
+    }
 }

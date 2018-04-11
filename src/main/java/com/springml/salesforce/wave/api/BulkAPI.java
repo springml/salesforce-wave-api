@@ -3,6 +3,7 @@ package com.springml.salesforce.wave.api;
 import com.springml.salesforce.wave.model.BatchInfo;
 import com.springml.salesforce.wave.model.BatchInfoList;
 import com.springml.salesforce.wave.model.JobInfo;
+import java.util.List;
 
 /**
  * Java client for Salesforce Bulk API
@@ -88,4 +89,23 @@ public interface BulkAPI {
      * @throws Exception
      */
     public BatchInfo getBatchInfo(String jobId, String batchId) throws Exception;
+
+    /**
+     * Retrieve the batch result list
+     * @param jobId
+     * @param batchId
+     * @return
+     * @throws Exception
+     */
+    public List<String> getBatchResultIds(String jobId, String batchId) throws Exception;
+
+    /**
+     * Retrieve the results of the
+     * @param jobId
+     * @param batchId
+     * @param resultId
+     * @return
+     * @throws Exception
+     */
+    public String getBatchResult(String jobId, String batchId, String resultId) throws Exception;
 }

@@ -5,7 +5,9 @@ import static com.springml.salesforce.wave.util.WaveAPIConstants.*;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
+import java.util.Arrays;
 
+import com.springml.salesforce.wave.model.BatchResultList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -136,6 +138,21 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
         return getXmlMapper().readValue(response.getBytes(), BatchInfo.class);
     }
 
+    public List<String> getBatchResultIds(String jobId, String batchId) throws Exception {
+        String response = getResult(jobId, batchId);
+        return getXmlMapper().readValue(response.getBytes(), BatchResultList.class).getBatchResultIds();
+    }
+
+    public String getBatchResult(String jobId, String batchId, String resultId) throws Exception {
+        PartnerConnection connection = getSfConfig().getPartnerConnection();
+        URI requestURI = getSfConfig().getRequestURI(connection, getBatchResultPath(jobId, batchId, resultId));
+
+        String response = getHttpHelper().get(requestURI, getSfConfig().getSessionId(), true);
+        LOG.debug("Response from Salesforce Server " + response);
+
+        return response;
+    }
+
     public boolean isSuccess(String jobId) throws Exception {
         // TODO Auto-generated method stub
         return false;
@@ -175,6 +192,15 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
         StringBuilder batchResultPath = new StringBuilder();
         batchResultPath.append(getBatchPath(jobId, batchId));
         batchResultPath.append(PATH_RESULT);
+
+        return batchResultPath.toString();
+    }
+
+    private String getBatchResultPath(String jobId, String batchId, String resultId) {
+        StringBuilder batchResultPath = new StringBuilder();
+        batchResultPath.append(getBatchResultPath(jobId, batchId));
+        batchResultPath.append('/');
+        batchResultPath.append(resultId);
 
         return batchResultPath.toString();
     }
