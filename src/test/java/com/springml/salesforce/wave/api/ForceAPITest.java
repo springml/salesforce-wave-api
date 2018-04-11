@@ -10,12 +10,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.springml.salesforce.wave.model.*;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import com.springml.salesforce.wave.impl.ForceAPIImpl;
+import com.springml.salesforce.wave.model.AddTaskRequest;
+import com.springml.salesforce.wave.model.AddTaskResponse;
+import com.springml.salesforce.wave.model.DescribeSObjectResult;
+import com.springml.salesforce.wave.model.ForceResponse;
+import com.springml.salesforce.wave.model.SOQLResult;
 import com.springml.salesforce.wave.util.HTTPHelper;
 
 public class ForceAPITest extends BaseAPITest {

@@ -1,8 +1,12 @@
 package com.springml.salesforce.wave.api;
 
-import com.springml.salesforce.wave.model.*;
 
-import java.util.List;
+import com.springml.salesforce.wave.model.AddTaskRequest;
+import com.springml.salesforce.wave.model.AddTaskResponse;
+import com.springml.salesforce.wave.model.DescribeSObjectResult;
+import com.springml.salesforce.wave.model.ForceResponse;
+import com.springml.salesforce.wave.model.QueryResult;
+import com.springml.salesforce.wave.model.SOQLResult;
 
 /**
  * JAVA client for Salesforce REST API calls

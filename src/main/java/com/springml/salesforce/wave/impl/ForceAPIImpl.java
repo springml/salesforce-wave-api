@@ -4,12 +4,15 @@ import static com.springml.salesforce.wave.util.WaveAPIConstants.*;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.List;
 
-import com.springml.salesforce.wave.model.*;
 import org.apache.log4j.Logger;
 
 import com.springml.salesforce.wave.api.ForceAPI;
+import com.springml.salesforce.wave.model.AddTaskRequest;
+import com.springml.salesforce.wave.model.AddTaskResponse;
+import com.springml.salesforce.wave.model.DescribeSObjectResult;
+import com.springml.salesforce.wave.model.ForceResponse;
+import com.springml.salesforce.wave.model.SOQLResult;
 import com.springml.salesforce.wave.util.SFConfig;
 
 /**
