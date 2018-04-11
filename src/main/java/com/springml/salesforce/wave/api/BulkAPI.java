@@ -3,6 +3,8 @@ package com.springml.salesforce.wave.api;
 import com.springml.salesforce.wave.model.BatchInfo;
 import com.springml.salesforce.wave.model.BatchInfoList;
 import com.springml.salesforce.wave.model.JobInfo;
+import org.apache.http.Header;
+import java.util.List;
 
 /**
  * Java client for Salesforce Bulk API
@@ -35,6 +37,16 @@ public interface BulkAPI {
      * @throws Exception
      */
     public JobInfo createJob(JobInfo jobInfo) throws Exception;
+
+    /**
+     * Create a new Bulk Job
+     * https://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/asynch_api_quickstart_create_job.htm
+     * @param jobInfo with details of the Job to be created
+     * @param customHeaders Custom headers for job. These headers will be appended to default headers.
+     * @return {@link JobInfo}
+     * @throws Exception
+     */
+    public JobInfo createJob(JobInfo jobInfo, List<Header> customHeaders) throws Exception;
 
     /**
      * Add a batch to an existing Job

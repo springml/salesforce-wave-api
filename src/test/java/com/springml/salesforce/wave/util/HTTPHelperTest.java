@@ -3,7 +3,13 @@ package com.springml.salesforce.wave.util;
 import static org.junit.Assert.*;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.http.Header;
+import org.apache.http.HeaderElement;
+import org.apache.http.ParseException;
+import org.apache.http.message.BasicHeader;
 import org.junit.Test;
 
 /**

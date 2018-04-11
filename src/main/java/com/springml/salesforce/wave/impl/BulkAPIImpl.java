@@ -3,10 +3,12 @@ package com.springml.salesforce.wave.impl;
 import static com.springml.salesforce.wave.util.WaveAPIConstants.*;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.Header;
 import org.apache.log4j.Logger;
 
 import com.sforce.soap.partner.PartnerConnection;
@@ -38,11 +40,15 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
     }
 
     public JobInfo createJob(JobInfo jobInfo) throws Exception {
+        return createJob(jobInfo, new ArrayList<Header>());
+    }
+
+    public JobInfo createJob(JobInfo jobInfo, List<Header> customHeaders) throws Exception {
         PartnerConnection connection = getSfConfig().getPartnerConnection();
         URI requestURI = getSfConfig().getRequestURI(connection, getJobPath());
 
         String response = getHttpHelper().post(requestURI, getSfConfig().getSessionId(),
-                getObjectMapper().writeValueAsString(jobInfo), true);
+                getObjectMapper().writeValueAsString(jobInfo), true, customHeaders);
         LOG.debug("Response from Salesforce Server " + response);
 
         JobInfo respJobInfo = getObjectMapper().readValue(response.getBytes(), JobInfo.class);
