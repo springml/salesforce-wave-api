@@ -1,6 +1,5 @@
 package com.springml.salesforce.wave.api;
 
-
 import com.springml.salesforce.wave.model.AddTaskRequest;
 import com.springml.salesforce.wave.model.AddTaskResponse;
 import com.springml.salesforce.wave.model.DescribeSObjectResult;
