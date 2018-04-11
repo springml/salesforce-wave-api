@@ -10,21 +10,19 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.springml.salesforce.wave.model.*;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import com.springml.salesforce.wave.impl.ForceAPIImpl;
-import com.springml.salesforce.wave.model.AddTaskRequest;
-import com.springml.salesforce.wave.model.AddTaskResponse;
-import com.springml.salesforce.wave.model.ForceResponse;
-import com.springml.salesforce.wave.model.SOQLResult;
 import com.springml.salesforce.wave.util.HTTPHelper;
 
 public class ForceAPITest extends BaseAPITest {
     private static final String SOQL = "SELECT AccountId, Id, ProposalID__c FROM Opportunity where ProposalID__c != null";
     private static final String QUERY_MORE_SOQL = "SELECT Id, OwnerId, Name, Player_Id__c, Phone__c FROM player__c";
     private static final String RESPONSE_JSON = "{\"totalSize\":4,\"done\":true,\"records\":[{\"attributes\":{\"type\":\"Opportunity\",\"url\":\"/services/data/v34.0/sobjects/Opportunity/006B0000002ndnuIAA\"},\"AccountId\":\"001B0000003oYAfIAM\",\"Id\":\"006B0000002ndnuIAA\",\"ProposalID__c\":\"103\"},{\"attributes\":{\"type\":\"Opportunity\",\"url\":\"/services/data/v34.0/sobjects/Opportunity/006B0000002ndnpIAA\"},\"AccountId\":\"001B0000003oYAfIAM\",\"Id\":\"006B0000002ndnpIAA\",\"ProposalID__c\":\"102\"}]}";
+
 
     @Before
     public void setup() throws Exception {
@@ -234,4 +232,40 @@ public class ForceAPITest extends BaseAPITest {
         assertNotNull(response.getId());
     }
 
+    @Test
+    public void testDescribeSalesforceObject() throws Exception {
+        ForceAPI forceAPI = APIFactory.getInstance().forceAPI("dummyusername",
+                "dummypassword", "https://login.salesforce.com");
+        when(httpHelper.get(any(URI.class), anyString())).
+                thenReturn("{\"createable\":true,\"name\":\"TestObject\",\"fields\":[{\"createable\":false,\"name\":\"Id\"},{\"createable\":true,\"name\":\"fieldName\"}]}");
+        ((ForceAPIImpl) forceAPI).setHttpHelper(httpHelper);
+        ((ForceAPIImpl) forceAPI).setSfConfig(sfConfig);
+        ((ForceAPIImpl) forceAPI).setObjectMapper(objectMapper);
+
+        DescribeSObjectResult response = forceAPI.describeSalesforceObject("TestObject");
+        assertNotNull(response);
+        assertEquals(response.getName(), "TestObject");
+        assertNull(response.getError());
+        assertEquals(response.isCreateable(), true);
+        assertEquals(response.getFields().size(), 2);
+        assertEquals(response.getFields().get(0).isCreateable(), false);
+        assertEquals(response.getFields().get(0).getName(), "Id");
+        assertEquals(response.getFields().get(1).isCreateable(), true);
+        assertEquals(response.getFields().get(1).getName(), "fieldName");
+    }
+
+    @Test
+    public void testDescribeSalesforceObjectNegativeCase() throws Exception {
+        ForceAPI forceAPI = APIFactory.getInstance().forceAPI("dummyusername",
+                "dummypassword", "https://login.salesforce.com");
+        when(httpHelper.get(any(URI.class), anyString())).
+                thenReturn("[{\"errorCode\":\"NOT_FOUND\",\"message\":\"The requested resource does not exist\"}]");
+        ((ForceAPIImpl) forceAPI).setHttpHelper(httpHelper);
+        ((ForceAPIImpl) forceAPI).setSfConfig(sfConfig);
+        ((ForceAPIImpl) forceAPI).setObjectMapper(objectMapper);
+
+        DescribeSObjectResult response = forceAPI.describeSalesforceObject("TestObject");
+        assertNotNull(response);
+        assertNotNull(response.getError());
+    }
 }

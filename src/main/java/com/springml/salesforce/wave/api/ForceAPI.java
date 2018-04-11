@@ -1,10 +1,8 @@
 package com.springml.salesforce.wave.api;
 
-import com.springml.salesforce.wave.model.AddTaskRequest;
-import com.springml.salesforce.wave.model.AddTaskResponse;
-import com.springml.salesforce.wave.model.ForceResponse;
-import com.springml.salesforce.wave.model.QueryResult;
-import com.springml.salesforce.wave.model.SOQLResult;
+import com.springml.salesforce.wave.model.*;
+
+import java.util.List;
 
 /**
  * JAVA client for Salesforce REST API calls
@@ -47,4 +45,12 @@ public interface ForceAPI {
 //    public InsertObjectsResponse insertObjects(String object, List<String> objects) throws Exception;
 
     public String getSFEndpoint() throws Exception;
+
+    /**
+     * Returns list of the salesforce object column names
+     * @param object Name of the salesforce object
+     * @return
+     * @throws Exception
+     */
+    public DescribeSObjectResult describeSalesforceObject(String object) throws Exception;
 }

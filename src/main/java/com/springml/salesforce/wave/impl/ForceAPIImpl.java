@@ -4,14 +4,12 @@ import static com.springml.salesforce.wave.util.WaveAPIConstants.*;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 
+import com.springml.salesforce.wave.model.*;
 import org.apache.log4j.Logger;
 
 import com.springml.salesforce.wave.api.ForceAPI;
-import com.springml.salesforce.wave.model.AddTaskRequest;
-import com.springml.salesforce.wave.model.AddTaskResponse;
-import com.springml.salesforce.wave.model.ForceResponse;
-import com.springml.salesforce.wave.model.SOQLResult;
 import com.springml.salesforce.wave.util.SFConfig;
 
 /**
@@ -93,6 +91,23 @@ public class ForceAPIImpl extends AbstractAPIImpl implements ForceAPI {
                 null, null, null).toString();
     }
 
+    public DescribeSObjectResult describeSalesforceObject(String object) throws Exception {
+        SFConfig sfConfig = getSfConfig();
+        String objDescribePath = getSalesforceObjectDescribePath(sfConfig, object);
+        URI objDescribeURI = sfConfig.getRequestURI(
+                sfConfig.getPartnerConnection(), objDescribePath);
+
+        String responseStr = getHttpHelper().get(objDescribeURI, sfConfig.getSessionId());
+        DescribeSObjectResult response = null;
+        try {
+            response = getObjectMapper().readValue(responseStr.getBytes(), DescribeSObjectResult.class);
+        } catch (IOException e) {
+            response = new DescribeSObjectResult();
+            response.setError(responseStr);
+        }
+        return response;
+    }
+
     private String getInsertPath(SFConfig sfConfig, String object) {
         StringBuilder objPath = new StringBuilder();
         objPath.append(SERVICE_PATH);
@@ -149,6 +164,14 @@ public class ForceAPIImpl extends AbstractAPIImpl implements ForceAPI {
         queryPath.append(PATH_QUERY);
 
         return queryPath.toString();
+    }
+
+    private String getSalesforceObjectDescribePath(SFConfig sfConfig, String object) {
+        StringBuilder objDescribePath = new StringBuilder();
+        objDescribePath.append(getInsertPath(sfConfig, object));
+        objDescribePath.append("/describe");
+
+        return objDescribePath.toString();
     }
 
 }
