@@ -126,7 +126,7 @@ public class BulkAPITest extends BaseAPITest {
 
     @Test
     public void testCreateJob() throws Exception {
-        when(httpHelper.post(any(URI.class), anyString(), anyString(), anyBoolean())).thenReturn(CREATE_JOB_RESPONSE);
+        when(httpHelper.post(any(URI.class), anyString(), anyString(), anyBoolean(), anyList())).thenReturn(CREATE_JOB_RESPONSE);
 
         JobInfo jobInfo = bulkAPI.createJob(STR_CONTACT);
         assertEquals(STR_CONTACT, jobInfo.getObject());
