@@ -91,7 +91,7 @@ public interface BulkAPI {
     public BatchInfo getBatchInfo(String jobId, String batchId) throws Exception;
 
     /**
-     * Retrieve a list of batch result IDs for a particular batch job.
+     * Retrieves a list of batch result IDs for a particular batch job.
      * @param jobId The identifier for the job
      * @param batchId The batch identifier for the job
      * @return
@@ -100,7 +100,7 @@ public interface BulkAPI {
     public List<String> getBatchResultIds(String jobId, String batchId) throws Exception;
 
     /**
-     * Get bulk query results
+     * Gets bulk query results
      * @param jobId The identifier for the job
      * @param batchId The batch identifier for the job
      * @param resultId the result ID in the response to the batch result list request
