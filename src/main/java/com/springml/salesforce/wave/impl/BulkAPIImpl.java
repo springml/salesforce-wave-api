@@ -140,6 +140,15 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
 
     public List<String> getBatchResultIds(String jobId, String batchId) throws Exception {
         String response = getResult(jobId, batchId);
+
+        if (CONTENT_TYPE_APPLICATION_JSON.equals(getContentType(jobId))) {
+            if (response != null && response.startsWith("[") && response.endsWith("]")) {
+                return Arrays.asList(response.substring(1, response.length() - 1).split(","));
+            } else {
+                throw new Exception("Unable to parse response: " + response);
+            }
+        }
+
         return getXmlMapper().readValue(response.getBytes(), BatchResultList.class).getBatchResultIds();
     }
 
@@ -228,5 +237,4 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
         jobPath.append(PATH_JOB);
         return jobPath.toString();
     }
-
 }
