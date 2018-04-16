@@ -155,6 +155,16 @@ public class BulkAPITest extends BaseAPITest {
     }
 
     @Test
+    public void testIsCompletedFalseCase() throws Exception {
+        final String GET_BATCHLIST_RESPONSE = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><batchInfoList xmlns=\"http://www.force.com/2009/06/asyncapi/dataload\"><batchInfo><id>751B0000000scSHIAY</id><jobId>750B0000000WlhtIAC</jobId><state>InProgress</state></batchInfo><batchInfo><id>751B0000000scSHIAZ</id><jobId>750B0000000WlhtIAC</jobId><state>Completed</state></batchInfo></batchInfoList>";
+        URI baseBatchURI = new URI(BASE_BATCH_URL);
+        when(httpHelper.get(baseBatchURI, SESSION_ID, true)).thenReturn(GET_BATCHLIST_RESPONSE);
+
+        assertFalse(bulkAPI.isCompleted(STR_JOB_ID));
+
+    }
+
+    @Test
     public void testGetBatchInfoList() throws Exception {
         BatchInfoList batchInfoList = bulkAPI.getBatchInfoList(STR_JOB_ID);
         assertNotNull(batchInfoList);

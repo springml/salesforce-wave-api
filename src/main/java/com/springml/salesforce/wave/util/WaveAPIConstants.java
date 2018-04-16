@@ -17,6 +17,9 @@ public class WaveAPIConstants {
     public static final String STR_CLOSED = "Closed";
     public static final String STR_COMPLETED = "Completed";
     public static final String STR_FAILED = "Failed";
+    public static final String STR_QUEUED = "Queued";
+    public static final String STR_IN_PROGRESS = "InProgress";
+    public static final String STR_NOT_PROCESSED = "Not Processed";
 
     public static final String CONTENT_TYPE_APPLICATION_JSON = "application/json";
     public static final String CONTENT_TYPE_APPLICATION_XML = "application/xml";
