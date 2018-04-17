@@ -83,14 +83,17 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
     public boolean isCompleted(String jobId) throws Exception {
         BatchInfoList batchInfoList = getBatchInfoList(jobId);
         List<BatchInfo> batchInfos = batchInfoList.getBatchInfo();
-        boolean isCompleted = true;
+
         LOG.debug("BatchInfos : " + batchInfos);
         if (batchInfos != null) {
             for (BatchInfo batchInfo : batchInfos) {
                 LOG.debug("Batch state : " + batchInfo.getState());
-                isCompleted = STR_COMPLETED.equals(batchInfo.getState());
+                // The following reference details all the different batch states:
+                // https://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/asynch_api_batches_interpret_status.htm
                 if (STR_FAILED.equals(batchInfo.getState())) {
                     throw new Exception("Batch '" + batchInfo.getId() + "' failed with error '" + batchInfo.getStateMessage() + "'");
+                } else if (STR_IN_PROGRESS.equals(batchInfo.getState()) || STR_QUEUED.equals(batchInfo.getState())) {
+                    return false;
                 }
 
                 LOG.info("Number of records failed : " + batchInfo.getNumberRecordsFailed());
@@ -103,7 +106,7 @@ public class BulkAPIImpl extends AbstractAPIImpl implements BulkAPI {
             }
         }
 
-        return isCompleted;
+        return true;
     }
 
     private String getResult(String jobId, String batchId) throws Exception {
