@@ -5,8 +5,11 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.Header;
+import org.apache.http.message.BasicHeader;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -154,9 +157,24 @@ public class BulkAPITest extends BaseAPITest {
 
     @Test
     public void testCreateJob() throws Exception {
-        when(httpHelper.post(any(URI.class), anyString(), anyString(), anyBoolean())).thenReturn(CREATE_JOB_RESPONSE);
+        when(httpHelper.post(any(URI.class), anyString(), anyString(), anyBoolean(), anyList())).thenReturn(CREATE_JOB_RESPONSE);
 
         JobInfo jobInfo = bulkAPI.createJob(STR_CONTACT);
+        assertEquals(STR_CONTACT, jobInfo.getObject());
+        assertNotNull(jobInfo.getId());
+        assertEquals(STR_JOB_ID, jobInfo.getId());
+    }
+
+    @Test
+    public void testCreateJobWithCustomHeaders() throws Exception {
+        Header customHeader = new BasicHeader("Sforce-Enable-PKChunking", "true");
+        List<Header> customHeaders = new ArrayList<Header>();
+        customHeaders.add(customHeader);
+
+        when(httpHelper.post(any(URI.class), anyString(), anyString(), anyBoolean(), eq(customHeaders))).thenReturn(CREATE_JOB_RESPONSE);
+
+        JobInfo inputJobInfo = new JobInfo(STR_CONTACT);
+        JobInfo jobInfo = bulkAPI.createJob(inputJobInfo, customHeaders);
         assertEquals(STR_CONTACT, jobInfo.getObject());
         assertNotNull(jobInfo.getId());
         assertEquals(STR_JOB_ID, jobInfo.getId());

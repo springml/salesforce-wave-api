@@ -4,8 +4,11 @@ import static com.springml.salesforce.wave.util.WaveAPIConstants.*;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.config.RequestConfig;
@@ -32,7 +35,15 @@ public class HTTPHelper {
         return post(uri, sessionId, request, CONTENT_TYPE_APPLICATION_JSON, isBulk);
     }
 
+    public String post(URI uri, String sessionId, String request, boolean isBulk, List<Header> customHeaders) throws Exception {
+        return post(uri, sessionId, request, CONTENT_TYPE_APPLICATION_JSON, isBulk, customHeaders);
+    }
+
     public String post(URI uri, String sessionId, String request, String contentType, boolean isBulk) throws Exception {
+        return post(uri, sessionId, request, contentType, isBulk, new ArrayList<Header>());
+    }
+
+    public String post(URI uri, String sessionId, String request, String contentType, boolean isBulk, List<Header> customHeaders) throws Exception {
         LOG.info("Executing POST request on " + uri);
         LOG.debug("Sending request " + request);
         LOG.debug("Content-Type " + contentType);
@@ -48,6 +59,11 @@ public class HTTPHelper {
         HttpPost httpPost = new HttpPost(uri);
         httpPost.setEntity(entity);
         httpPost.setConfig(getRequestConfig());
+
+        for (Header customHeader : customHeaders) {
+            httpPost.addHeader(customHeader);
+        }
+
         if (isBulk) {
             httpPost.addHeader(HEADER_X_SFDC_SESSION, sessionId);
         } else {
