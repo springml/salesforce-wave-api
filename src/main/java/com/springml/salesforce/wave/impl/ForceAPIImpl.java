@@ -26,11 +26,15 @@ public class ForceAPIImpl extends AbstractAPIImpl implements ForceAPI {
     }
 
     public SOQLResult query(String soql) throws Exception {
+        return query(soql, false);
+    }
+
+    public SOQLResult query(String soql, boolean all) throws Exception {
         StringBuilder queryParam = new StringBuilder();
         queryParam.append(QUERY_PARAM);
         queryParam.append(soql);
         SFConfig sfConfig = getSfConfig();
-        String queryPath = getQueryPath(sfConfig);
+        String queryPath = getQueryPath(sfConfig, all);
         URI queryURI = getSfConfig().getRequestURI(
                 getSfConfig().getPartnerConnection(), queryPath, queryParam.toString());
 
@@ -159,12 +163,16 @@ public class ForceAPIImpl extends AbstractAPIImpl implements ForceAPI {
         return soqlResult;
     }
 
-    private String getQueryPath(SFConfig sfConfig) {
+    private String getQueryPath(SFConfig sfConfig, boolean all) {
         StringBuilder queryPath = new StringBuilder();
         queryPath.append(SERVICE_PATH);
         queryPath.append("v");
         queryPath.append(sfConfig.getApiVersion());
-        queryPath.append(PATH_QUERY);
+        if (all) {
+            queryPath.append(PATH_QUERY_ALL);
+        } else {
+            queryPath.append(PATH_QUERY);
+        }
 
         return queryPath.toString();
     }

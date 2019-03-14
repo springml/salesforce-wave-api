@@ -20,6 +20,16 @@ public interface ForceAPI {
     public SOQLResult query(String soql) throws Exception;
 
     /**
+     * Execute the given SOQL by using either the "/query" API
+     * or the "/queryAll" API
+     * @param soql - SOQL to be executed.
+     * @param all - Toggle for /query or /queryAll
+     * @return {@link QueryResult}
+     * @throws Exception
+     */
+    public SOQLResult query(String soql, boolean all) throws Exception;
+
+    /**
      * Query further records using nextRecordsURL
      * @param oldResult
      * @return
