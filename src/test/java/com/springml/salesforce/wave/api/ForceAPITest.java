@@ -21,6 +21,7 @@ import com.springml.salesforce.wave.model.DescribeSObjectResult;
 import com.springml.salesforce.wave.model.ForceResponse;
 import com.springml.salesforce.wave.model.SOQLResult;
 import com.springml.salesforce.wave.util.HTTPHelper;
+import org.mockito.ArgumentCaptor;
 
 public class ForceAPITest extends BaseAPITest {
     private static final String SOQL = "SELECT AccountId, Id, ProposalID__c FROM Opportunity where ProposalID__c != null";
@@ -271,5 +272,47 @@ public class ForceAPITest extends BaseAPITest {
         DescribeSObjectResult response = forceAPI.describeSalesforceObject("TestObject");
         assertNotNull(response);
         assertNotNull(response.getError());
+    }
+
+    @Test
+    public void testQueryAllDefault() throws Exception {
+        ForceAPI forceAPI = APIFactory.getInstance().forceAPI("dummyusername",
+                "dummypassword", "https://login.salesforce.com");
+        ArgumentCaptor<URI> argument = testQueryAll(forceAPI);
+
+        forceAPI.query(SOQL);
+        assertFalse(argument.getValue().getPath().contains("/queryAll"));
+    }
+
+    @Test
+    public void testQueryAllTrue() throws Exception {
+        ForceAPI forceAPI = APIFactory.getInstance().forceAPI("dummyusername",
+                "dummypassword", "https://login.salesforce.com");
+        ArgumentCaptor<URI> argument = testQueryAll(forceAPI);
+
+        forceAPI.query(SOQL, true);
+        assertTrue(argument.getValue().getPath().contains("/queryAll"));
+    }
+
+    @Test
+    public void testQueryAllFalse() throws Exception {
+        ForceAPI forceAPI = APIFactory.getInstance().forceAPI("dummyusername",
+                "dummypassword", "https://login.salesforce.com");
+        ArgumentCaptor<URI> argument = testQueryAll(forceAPI);
+
+        forceAPI.query(SOQL, false);
+        assertFalse(argument.getValue().getPath().contains("/queryAll"));
+    }
+
+    private ArgumentCaptor testQueryAll(ForceAPI forceAPI) throws Exception {
+        when(sfConfig.getRequestURI(any(PartnerConnectionExt.class), matches(".*query.*"), any(String.class)))
+                .thenCallRealMethod();
+        ((ForceAPIImpl) forceAPI).setHttpHelper(httpHelper);
+        ((ForceAPIImpl) forceAPI).setSfConfig(sfConfig);
+        ((ForceAPIImpl) forceAPI).setObjectMapper(objectMapper);
+
+        ArgumentCaptor<URI> argument = ArgumentCaptor.forClass(URI.class);
+        when(httpHelper.get(argument.capture(), any(String.class), any(Integer.class))).thenReturn(RESPONSE_JSON);
+        return argument;
     }
 }
