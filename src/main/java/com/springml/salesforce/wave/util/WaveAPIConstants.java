@@ -37,7 +37,8 @@ public class WaveAPIConstants {
     public static final String API_VERSION = "35.0";
     public static final String PATH_WAVE_QUERY = "/wave/query";
     public static final String PATH_WAVE_DATASETS = "/wave/datasets";
-    public static final String PATH_SOAP_ENDPOINT = "/services/Soap/u/" + API_VERSION;
+    public static final String PATH_SOAP_ENDPOINT_PRE = "/services/Soap/u/";
+    public static final String PATH_SOAP_ENDPOINT = PATH_SOAP_ENDPOINT_PRE + API_VERSION;
     public static final String SERVICE_PATH_WAVE_QUERY = SERVICE_PATH + "v" + API_VERSION + PATH_WAVE_QUERY;
     public static final String PATH_QUERY = "/query";
     public static final String PATH_QUERY_ALL = "/queryAll";
